@@ -1,0 +1,38 @@
+version: '3.1'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: development
+    depends_on:
+      - db
+    # Comment this dependency if you do not want to use adminer
+      - adminer
+    ports:
+      - 5000:5000
+
+  db:
+    image: postgres:13-alpine
+    restart: always
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: ${DATABASE_DB}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    # volumes:
+      # - ./db_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  # Comment this service if you do not want to use adminer
+  adminer:
+    image: adminer
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 8888:8080

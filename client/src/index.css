@@ -1,0 +1,14 @@
+@tailwind base;
+
+@layer base {
+  html {
+    @apply min-h-screen font-mono text-gray-900;
+  }
+}
+
+@tailwind components;
+@tailwind utilities;
+
+body {
+  min-height: 100vh;
+}
