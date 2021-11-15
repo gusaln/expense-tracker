@@ -85,7 +85,7 @@ function AccountForm(props) {
             messages={mapError(errors, "color")}
           />
           <TextInput
-            label="Currency (can't be modified after being created)"
+            label="Currency (can't be modified)"
             name="currency"
             required
             messages={mapError(errors, "currency")}
