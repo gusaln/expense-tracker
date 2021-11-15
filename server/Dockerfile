@@ -6,8 +6,7 @@ COPY package.json ./
 COPY package-lock.json ./
 RUN npm i --omit dev
 
-COPY . .
-
+COPY . ./
 ENV PATH /var/www/node_modules/.bin:$PATH
 
 EXPOSE 5000

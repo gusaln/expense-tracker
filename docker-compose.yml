@@ -1,0 +1,62 @@
+version: '3.1'
+
+services:
+  client:
+    build:
+      context: client/
+      dockerfile: Dockerfile
+    environment:
+      REACT_APP_BASE_URL: ${REACT_APP_BASE_URL}
+      CHOKIDAR_USEPOLLING: 'true'
+    depends_on:
+      - server
+    volumes:
+      - './client:/app'
+    networks:
+      - coms
+    ports:
+      - ${CLIENT_PORT}:3000
+
+  server:
+    build:
+      context: server/
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_DB: ${DATABASE_DB}
+    depends_on:
+      - db
+      - './server:/var/www'
+    networks:
+      - coms
+    ports:
+      - ${SERVER_PORT}:5000
+
+  # Comment this service if you do not want to use adminer
+  adminer:
+    image: adminer
+    depends_on:
+      - db
+    networks:
+      - coms
+    ports:
+      - ${ADMINER_PORT}:8080
+
+  db:
+    image: postgres:13-alpine
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: ${DATABASE_DB}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    networks:
+      - coms
+    ports:
+      - ${DB_PORT}:5432
+
+networks:
+  coms:
+    driver: bridge

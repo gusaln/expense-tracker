@@ -5,11 +5,11 @@ start:
 
 migrate:
 	docker-compose up -d
-	docker exec -it -w /var/www server_app_1 npm run db migrate:up
+	docker-compose exec -- server npm run db migrate:up
 
 seed:
 	docker-compose up -d
-	docker exec -it -w /var/www server_app_1 npm run db seed:run
+	docker-compose exec -- server npm run db seed:run
 
 stop:
 	docker-compose down
