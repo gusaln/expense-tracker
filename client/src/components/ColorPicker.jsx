@@ -16,6 +16,46 @@ const colors = Object.entries(colorsMap).reduce(
   []
 );
 
+function ColorPickerPanel(props) {
+  const { value, onCloseColorPanel, onCancelCloseColorPanel, onValueSelected } =
+    props;
+
+  const colorListContent = useMemo(
+    () =>
+      colors.map((color) => (
+        <li
+          id={`color-${color.replace('#', '')}`}
+          role="menuitem"
+          key={color}
+          className={classname(
+            {
+              "my-6 shadow-lg": color === value,
+              "mb-2 hover:shadow-md": color !== value,
+            },
+            "w-full h-8 rounded-lg cursor-pointer transition-all duration-200 ease-out"
+          )}
+          style={{ backgroundColor: color }}
+          onClick={() => onValueSelected(color)}
+        />
+      )),
+    [value, onValueSelected]
+  );
+
+  return (
+    <div
+      className="z-50 w-full absolute top-1/2 right-0 md:w-8/12"
+      onMouseLeave={onCloseColorPanel}
+      onMouseEnter={onCancelCloseColorPanel}
+    >
+      <div className="w-full h-52 m-2 shadow-md p-6 bg-white overflow-x-hidden overflow-y-scroll">
+      <ul role="menu" className="w-full">
+        {colorListContent}
+      </ul>
+      </div>
+    </div>
+  );
+}
+
 function ColorPicker(props) {
   const formContext = useFormContext();
 
@@ -26,35 +66,29 @@ function ColorPicker(props) {
 
   const [isOpen, setOpen] = useState(false);
   const timeoutHandler = useRef(null);
-  const selectedItemRef = useRef(null);
-
-  formContext.watch((state) => {
-    setInternalValue(state[name]);
-  });
-
-  useEffect(() => {
-    setInternalValue(formContext.getValues()[name]);
-  }, [formContext, name]);
-
-  function cancelCloseColorPanel() {
-    if (timeoutHandler.current) {
-      clearTimeout(timeoutHandler.current);
-    }
-  }
 
   function closeColorPanel() {
     timeoutHandler.current = setTimeout(() => {
       setOpen(false);
       timeoutHandler.current = null;
-    }, 400);
+    }, 300);
   }
 
-  function handleOpenPanel() {
-    setOpen(true);
-    setTimeout(() => {
-      if (selectedItemRef.current) selectedItemRef.current.scrollIntoView();
-    }, 0);
+  function cancelCloseColorPanel() {
+    if (timeoutHandler.current) clearTimeout(timeoutHandler.current);
   }
+
+  function handleOpenPanel () {
+    setOpen(true);
+    // Uses a delay to give time to the dom to update and show the panel.
+    setTimeout(() => {
+      if (internalValue) {
+        document
+          .querySelector(`#color-${internalValue.replace('#', '')}`)
+          .scrollIntoView();
+        }
+    }, 0);
+  };
 
   const handleValueSelected = useCallback(
     (color) => {
@@ -67,26 +101,14 @@ function ColorPicker(props) {
     formContext.setValue(props.name, "");
   }
 
-  const colorListContent = useMemo(
-    () =>
-      colors.map((color) => (
-        <li
-          role="menuitem"
-          key={color}
-          ref={color === internalValue ? selectedItemRef : undefined}
-          className={classname(
-            {
-              "my-6 shadow-lg": color === internalValue,
-              "mb-2 hover:shadow-md": color !== internalValue,
-            },
-            "w-full h-8 rounded-lg cursor-pointer transition-all duration-200 ease-out"
-          )}
-          style={{ backgroundColor: color }}
-          onClick={() => handleValueSelected(color)}
-        />
-      )),
-    [internalValue, handleValueSelected]
-  );
+  // Updates the internal value if the form value changes.
+  formContext.watch((state) => {
+    setInternalValue(state[name]);
+  });
+
+  useEffect(() => {
+    setInternalValue(formContext.getValues()[name]);
+  }, [formContext, name]);
 
   return (
     <div className="relative flex justify-between items-start">
@@ -98,7 +120,9 @@ function ColorPicker(props) {
         ""
       )}
 
+      {/* Input container */}
       <div className="w-full md:w-8/12">
+        {/* This is the input that shows the current value, but it is not connected to the form. */}
         <div
           className="w-full h-11 flex justify-between items-center border rounded p-2 focus:border-2 focus:border-gray-400 hover:border-gray-400"
           onClick={handleOpenPanel}
@@ -122,6 +146,8 @@ function ColorPicker(props) {
             <span className="text-gray-500">Click to pick a color</span>
           )}
         </div>
+
+        {/* Hidden input connected to the form. */}
         <input
           hidden
           id={name}
@@ -133,21 +159,25 @@ function ColorPicker(props) {
       </div>
 
       {isOpen ? (
-        <div
-          className="z-50 w-full md:w-8/12 h-52 absolute top-1/2 right-0 shadow-md p-6 bg-white overflow-x-hidden overflow-y-scroll"
-          onMouseLeave={closeColorPanel}
-          onMouseEnter={cancelCloseColorPanel}
-        >
-          <ul role="menu" className="w-full">
-            {colorListContent}
-          </ul>
-        </div>
+        <ColorPickerPanel
+          value={internalValue}
+          onValueSelected={handleValueSelected}
+          onCloseColorPanel={closeColorPanel}
+          onCancelCloseColorPanel={cancelCloseColorPanel}
+        />
       ) : (
         ""
       )}
     </div>
   );
 }
+
+ColorPickerPanel.propTypes = {
+  value: PropTypes.string,
+  onCloseColorPanel: PropTypes.func,
+  onCancelCloseColorPanel: PropTypes.func,
+  onValueSelected: PropTypes.func,
+};
 
 ColorPicker.propTypes = {
   label: PropTypes.string,
