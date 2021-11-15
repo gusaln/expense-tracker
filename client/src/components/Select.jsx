@@ -42,7 +42,7 @@ Select.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
   register: PropTypes.func.isRequired,
   required: PropTypes.bool,
-  messages: PropTypes.element,
+  messages: PropTypes.any,
 };
 
 export default Select;
