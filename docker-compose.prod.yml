@@ -4,33 +4,25 @@ services:
   client:
     build:
       context: client/
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     environment:
+      NODE_ENV: production
       REACT_APP_BASE_URL: ${REACT_APP_BASE_URL}
-      CHOKIDAR_USEPOLLING: 'true'
     depends_on:
       - server
-    volumes:
-      - './client:/app'
     networks:
       - coms
     ports:
-      - ${CLIENT_PORT}:3000
+      - ${CLIENT_PORT}:80
 
   server:
     build:
       context: server/
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     environment:
-      NODE_ENV: development
-      DATABASE_HOST: ${DATABASE_HOST}
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      DATABASE_DB: ${DATABASE_DB}
+      NODE_ENV: production
     depends_on:
       - db
-    volumes:
-      - './server:/var/www'
     networks:
       - coms
     ports:

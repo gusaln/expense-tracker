@@ -42,6 +42,8 @@ Also, the server `docker-compose.yml` creates an [Adminer](https://www.adminer.o
 To access it enter the url, select _Posgres_ in the dropdown menu, use `db` as the host (the name of the database service in the docker network), fill in the user and password of the database and click enter.
 You can comment the service entry in the `docker-compose.yml` without consequences.
 
+Note that both client and server run in development mode by default on purpose.
+
 To use different ports, check the [Changing the ports section](#changing-the-ports)
 
 ### Docker

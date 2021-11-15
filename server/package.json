@@ -1,6 +1,6 @@
 {
-  "name": "spend-me",
-  "version": "1.0",
+  "name": "expense-tracker-server",
+  "version": "1.0.0",
   "description": "A basic expense tracker app",
   "main": "index.js",
   "scripts": {
