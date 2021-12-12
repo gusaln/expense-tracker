@@ -134,11 +134,6 @@ export async function getTransfer(id) {
 }
 
 export async function addAccount(account) {
-  // Remove after creating the icon picker
-  if (!account.icon) {
-    account.icon = "account_balance_wallet"
-  }
-
   await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/accounts`, {
     method: "post",
     body: JSON.stringify(account),
@@ -149,11 +144,6 @@ export async function addAccount(account) {
 }
 
 export async function addCategory(category) {
-  // Remove after creating the icon picker
-  if (!category.icon) {
-    category.icon = "local_offer"
-  }
-
   await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/categories`, {
     method: "post",
     body: JSON.stringify(category),
@@ -194,11 +184,6 @@ export async function addTransfer(transfer) {
 }
 
 export async function updateAccount(id, account) {
-  // Remove after creating the icon picker
-  if (!account.icon) {
-    account.icon = "local_offer"
-  }
-
   const data = await httpRequest(
     `${process.env.REACT_APP_BASE_URL}/api/v1/accounts/${id}`,
     {
@@ -212,11 +197,6 @@ export async function updateAccount(id, account) {
 }
 
 export async function updateCategory(id, category) {
-  // Remove after creating the icon picker
-  if (!category.icon) {
-    category.icon = "account_balance_wallet"
-  }
-
   const data = await httpRequest(
     `${process.env.REACT_APP_BASE_URL}/api/v1/categories/${id}`,
     {

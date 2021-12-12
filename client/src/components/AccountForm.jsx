@@ -1,10 +1,11 @@
 import React, { useMemo } from "react";
 import PropTypes from "prop-types";
+import { FormProvider, useForm } from "react-hook-form";
 import Card from "./Card";
 import TextInput from "./TextInput";
 import Button from "./Button";
-import { FormProvider, useForm } from "react-hook-form";
 import ColorPicker from "./ColorPicker";
+import IconPicker from "./IconPicker";
 
 function mapError(errors, name) {
   if (errors[name]) {
@@ -72,12 +73,12 @@ function AccountForm(props) {
             required
             messages={mapError(errors, "name")}
           />
-          {/* <TextInput
+          <IconPicker
             label="Icon"
             name="icon"
             required
             messages={mapError(errors, "icon")}
-          /> */}
+          />
           <ColorPicker
             label="Color"
             name="color"

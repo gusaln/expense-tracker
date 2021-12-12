@@ -4,6 +4,7 @@ import Card from "./Card";
 import TextInput from "./TextInput";
 import Button from "./Button";
 import { FormProvider, useForm } from "react-hook-form";
+import IconPicker from "./IconPicker";
 import ColorPicker from "./ColorPicker";
 
 function mapError(errors, name) {
@@ -70,12 +71,12 @@ function CategoryEditForm(props) {
             required
             messages={mapError(errors, "name")}
           />
-          {/* <TextInput
+          <IconPicker
             label="Icon"
             name="icon"
             required
             messages={mapError(errors, "icon")}
-          /> */}
+          />
           <ColorPicker
             label="Color"
             name="color"

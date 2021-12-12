@@ -215,3 +215,16 @@ const numberFormatter = Intl.NumberFormat(undefined, {
 export function formatNumber(number) {
   return numberFormatter.format(number);
 }
+
+/**
+ * @param {Function} fn The function
+ * @param {number} delay A delay in ms
+ */
+export function debounce(fn, delay) {
+  let handler = null;
+
+  return function(...args) {
+    if(handler) clearTimeout(handler);
+    handler = setTimeout(() => {fn(...args)}, delay);
+  }
+}
