@@ -70,12 +70,10 @@ function TransactionsPanel() {
         titleAddon={
           <>
             <Button small onClick={() => setMonthOffset((m) => m - 1)}>
-              Prev. month
               <span className="material-icons">arrow_left</span>
             </Button>
             <div className="flex items-center">{monthLabel}</div>
             <Button small onClick={() => setMonthOffset((m) => m + 1)}>
-              Next month
               <span className="material-icons">arrow_right</span>
             </Button>
           </>
