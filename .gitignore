@@ -1,5 +1,4 @@
 .vscode
 
-db_data
-
 .env
+./docker/volumes

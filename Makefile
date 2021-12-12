@@ -16,4 +16,3 @@ stop:
 
 clean:
 	docker-compose down --rmi all -v
-	rm -rf ./db_data

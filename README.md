@@ -67,7 +67,8 @@ You need to have docker and docker-compose installed.
    ```
 
 The client will start on port `5000`.
-To use different ports, check the [Changing the ports section](#changing-the-ports)
+To use different ports, check the [Changing the ports section](#changing-the-ports).
+To clean up afterwards, read the [How to clean up after testing?](#how-to-clean-up-after-testing?).
 
 ### Manual
 
@@ -125,12 +126,13 @@ You can stop the containers running `make stop`.
 Note that the containers and volumes will remain in your system.
 To remove the images and volumes, use `make clean`.
 
-As a note, remember that you can run `docker system prune --volumes` to remove:
+Afterwards, you can just delete the folder with the repository.
 
-- all stopped containers
-- all networks not used by at least one container
-- all volumes not used by at least one container
-- all dangling images
-- all dangling build cache
+Note that, to remove the build cache from the containers used by this project and other projects you can to run **(at your own risk)** `docker builder prune`.
+If you want to go overkill, you could also run **(again, at your own risk)** `docker system prune --volumes` to remove:
 
-Afterwards, just delete the folder with the repository.
+- all stopped containers (from this and other projects)
+- all networks not used by at least one container (from this and other projects)
+- all volumes not used by at least one container (from this and other projects)
+- all dangling images (from this and other projects)
+- all dangling build cache (from this and other projects)

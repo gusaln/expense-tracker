@@ -1,6 +1,4 @@
 node_modules
-build
-db_data
 .dockerignore
 Dockerfile
 Dockerfile.prod
