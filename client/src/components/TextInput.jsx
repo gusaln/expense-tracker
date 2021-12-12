@@ -18,7 +18,7 @@ function TextInput(props) {
 
       <div className="w-full md:w-8/12">
         <input
-          className="w-full border rounded p-2 focus:border-2 focus:border-gray-400 hover:border-gray-400"
+          className="w-full h-11 border rounded p-2 focus:border-2 focus:border-gray-400 hover:border-gray-400"
           id={name}
           name={name}
           {...rest}
