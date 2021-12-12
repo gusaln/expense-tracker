@@ -17,14 +17,13 @@ const colors = Object.entries(colorsMap).reduce(
 );
 
 function ColorPickerPanel(props) {
-  const { value, onCloseColorPanel, onCancelCloseColorPanel, onValueSelected } =
-    props;
+  const { value, onClosePanel, onCancelClosePanel, onValueSelected } = props;
 
   const colorListContent = useMemo(
     () =>
       colors.map((color) => (
         <li
-          id={`color-${color.replace('#', '')}`}
+          id={`color-${color.replace("#", "")}`}
           role="menuitem"
           key={color}
           className={classname(
@@ -44,13 +43,13 @@ function ColorPickerPanel(props) {
   return (
     <div
       className="z-50 w-full absolute top-1/2 right-0 md:w-8/12"
-      onMouseLeave={onCloseColorPanel}
-      onMouseEnter={onCancelCloseColorPanel}
+      onMouseLeave={onClosePanel}
+      onMouseEnter={onCancelClosePanel}
     >
       <div className="w-full h-52 m-2 shadow-md p-6 bg-white overflow-x-hidden overflow-y-scroll">
-      <ul role="menu" className="w-full">
-        {colorListContent}
-      </ul>
+        <ul role="menu" className="w-full">
+          {colorListContent}
+        </ul>
       </div>
     </div>
   );
@@ -67,28 +66,28 @@ function ColorPicker(props) {
   const [isOpen, setOpen] = useState(false);
   const timeoutHandler = useRef(null);
 
-  function closeColorPanel() {
+  function closePanel() {
     timeoutHandler.current = setTimeout(() => {
       setOpen(false);
       timeoutHandler.current = null;
     }, 300);
   }
 
-  function cancelCloseColorPanel() {
+  function cancelClosePanel() {
     if (timeoutHandler.current) clearTimeout(timeoutHandler.current);
   }
 
-  function handleOpenPanel () {
+  function handleOpenPanel() {
     setOpen(true);
     // Uses a delay to give time to the dom to update and show the panel.
     setTimeout(() => {
       if (internalValue) {
         document
-          .querySelector(`#color-${internalValue.replace('#', '')}`)
+          .querySelector(`#color-${internalValue.replace("#", "")}`)
           .scrollIntoView();
-        }
+      }
     }, 0);
-  };
+  }
 
   const handleValueSelected = useCallback(
     (color) => {
@@ -97,7 +96,8 @@ function ColorPicker(props) {
     [formContext, props.name]
   );
 
-  function handleValueClear() {
+  function handleValueClear(ev) {
+    ev.stopPropagation();
     formContext.setValue(props.name, "");
   }
 
@@ -162,8 +162,8 @@ function ColorPicker(props) {
         <ColorPickerPanel
           value={internalValue}
           onValueSelected={handleValueSelected}
-          onCloseColorPanel={closeColorPanel}
-          onCancelCloseColorPanel={cancelCloseColorPanel}
+          onClosePanel={closePanel}
+          onCancelClosePanel={cancelClosePanel}
         />
       ) : (
         ""
@@ -174,8 +174,8 @@ function ColorPicker(props) {
 
 ColorPickerPanel.propTypes = {
   value: PropTypes.string,
-  onCloseColorPanel: PropTypes.func,
-  onCancelCloseColorPanel: PropTypes.func,
+  onClosePanel: PropTypes.func,
+  onCancelClosePanel: PropTypes.func,
   onValueSelected: PropTypes.func,
 };
 
