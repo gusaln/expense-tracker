@@ -12,7 +12,7 @@
 - The user can categorized incomes an expenses, but not transfers.
 - Every account has to have an icon an a color.
 - Every category has to have an icon an a color.
-- Categories for expenses and incomes are diferent.
+- Categories for expenses and incomes are different.
 
 ## Design
 
@@ -32,12 +32,12 @@ The user has to give a minimal amount of though about organization.
 ### Balance
 
 Also, accounts have a `balance` that shows how much money the account has and `total balance` which is the sum of the balances of all the accounts.
-This quantities will be positive most of the time, but there is no restriction in place to prevent users from susbtracting more money than they have stored.
+This quantities will be positive most of the time, but there is no restriction in place to prevent users from subtracting more money than they have stored.
 This can be used to show a debt towards something for example.
 
 ### Transactions
 
-_What happended to my money?_ is the main question this type of app should help the user answer.
+_What happened to my money?_ is the main question this type of app should help the user answer.
 This notion at the heart of the system of the exchange of money will be define as `transaction`.
 They have data like description, amount, date and associated account.
 
@@ -45,20 +45,20 @@ However, showing movement alone is not enough.
 `Transactions` have _direction_.
 Money can flow towards the user or away from them.
 To reflect this, `transactions` that add money to the `total balance` of the user will be`incomes` and the ones that do the opposite will be `expenses`.
-I deliberatly define these around adding or substracting to the `total balance` and not specific accounts.
+I deliberately define these around adding or subtracting to the `total balance` and not specific accounts.
 The reason being that there is a third type of movement.
 When we move money from one account to another (as when using an ATM), the total balance remain the same.
 This type of transaction is called `transfer`.
 
 An alternative design could be recording `transfers` implicitly as two `transactions`: an `expense` and an `income`.
-The user has to be _smart_ aboutit.
+The user has to be _smart_ about it.
 They need to develop a convention for describing and linking at a glance these two `transactions`.
 It is more prone to human error.
 I choose the design that makes a this operation explicit and obvious.
 
 ### Categories
 
-Having description for a `transaction` lets you know that you spent 29.99$ last saturday on games, but do not allow to see how many time or how much money that has happend in certain period of time.
+Having description for a `transaction` lets you know that you spent 29.99$ last saturday on games, but do not allow to see how many time or how much money that has happened in certain period of time.
 This is what allows one to track expenses.
 I could by one type of snack today and another tomorrow, but both expense were done for snacking purposes.
 To encode this _common reason_, we have the notion of `categories`.
@@ -66,16 +66,16 @@ To encode this _common reason_, we have the notion of `categories`.
 `Categories` are no more than a way of grouping transactions in similar buckets.
 The user can create as many as they like to organize themselves.
 Also, the system will allow `categories` for `incomes`, so that the user can not just answer _Where is my money going?_ but also _Where is my money coming from?_
-This is not usually a mistery for must people, but it is nevertheless useful for some.
+This is not usually a mystery for must people, but it is nevertheless useful for some.
 Income categories and expense categories are different since it does not make sense, for example, to share `Food` as a category for both.
 
 Also, transfers do not have categories.
 I see no use case for they to have such attribute.
-If you `transfer` money from your _Bank ABC account_ to your _Wallet_ via an ATM for _stealthly_ buying something, then the reason for spending the money will be recorded in the `expense` of the _Wallet_.
+If you `transfer` money from your _Bank ABC account_ to your _Wallet_ via an ATM for _stealthily_ buying something, then the reason for spending the money will be recorded in the `expense` of the _Wallet_.
 
 ### Current balance
 
-There are two approaches to produce the balance: 
+There are two approaches to produce the balance:
 - compute the current balance for each account every time it is needed and
 - keep the current balance stored with the account and modify it every time a transaction involving the account is done.
 
@@ -97,7 +97,7 @@ Here we have a basic diagram for the design.
 ### Storage
 
 For storage, I squashed all the transactions in one table and use the `transactions.type` column to tell them apart.
-Which means I do not have to unite them when querying all the transactions that happend in a period, but it is still simply to filter them by type.
+Which means I do not have to unite them when querying all the transactions that happened in a period, but it is still simple to filter them by type.
 
 ![Storage diagram](design.assets/expense-tracker-storage.svg)
 
@@ -105,4 +105,4 @@ Which means I do not have to unite them when querying all the transactions that 
 
 By no means a complete list:
 
-- There is no explicit way of expressing fees foor transfering funds between accounts.
+- There is no explicit way of expressing fees for transferring funds between accounts.
