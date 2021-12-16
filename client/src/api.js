@@ -20,9 +20,11 @@ async function httpRequest(url, options = undefined) {
 
     if (response.status === 422) {
       err.errors = {};
-      data.details.body.forEach((message) => {
-        err.errors[message.path[0]] = message.message;
-      });
+      data.errors
+        .filter((errorObject) => errorObject.source.pointer.startsWith('/body/'))
+        .forEach((errorObject) => {
+          err.errors[errorObject.source.pointer.replace('/body/', '')] = errorObject.detail;
+        });
     }
 
     throw err;
