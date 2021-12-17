@@ -12,7 +12,7 @@ const transformDbRecordToTransfer = (dbTransfer: TransactionDbRecord<TransferSel
   account_id: Number(dbTransfer.account_id),
   description: dbTransfer.description,
   amount: Number(dbTransfer.amount),
-  transfered_to: Number(dbTransfer.transfered_to),
+  transferred_to: Number(dbTransfer.transferred_to),
   date: dbTransfer.date,
   created_at: dbTransfer.created_at,
   updated_at: dbTransfer.updated_at,
@@ -23,7 +23,7 @@ const transformTransferTransactionToTransfer = (dbTransfer: TransferTransaction)
   account_id: Number(dbTransfer.account_id),
   description: dbTransfer.description,
   amount: Number(dbTransfer.amount),
-  transfered_to: Number(dbTransfer.transfered_to),
+  transferred_to: Number(dbTransfer.transferred_to),
   date: dbTransfer.date,
   created_at: dbTransfer.created_at,
   updated_at: dbTransfer.updated_at,
@@ -66,7 +66,7 @@ export const createTransfer = async (data: TransferNew): Promise<Transfer> => {
   const newTransfer = await createTransaction({
     type: TRANSACTION_TYPE_TRANSFER,
     account_id: data.account_id,
-    transfered_to: data.transfered_to,
+    transferred_to: data.transferred_to,
     description: data.description,
     amount: data.amount,
     date: data.date,
@@ -88,7 +88,7 @@ export const updateTransfer = async (id: TransferDbId, data: TransferUpdate): Pr
         account_id: data.account_id,
         description: data.description,
         amount: data.amount,
-        transfered_to: data.transfered_to,
+        transferred_to: data.transferred_to,
         date: data.date,
       } as TransactionNew<'transfer'>
     );

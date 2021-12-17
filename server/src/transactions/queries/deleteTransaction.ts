@@ -38,7 +38,7 @@ export async function deleteTransaction(id: TransactionDbId, type?: TransactionT
 
       case TRANSACTION_TYPE_TRANSFER:
         await addBalanceToAccount(transaction.account_id, transaction.amount, trx);
-        await subtractBalanceToAccount(transaction.transfered_to as AccountDbId, transaction.amount, trx);
+        await subtractBalanceToAccount(transaction.transferred_to as AccountDbId, transaction.amount, trx);
         break;
 
       default:

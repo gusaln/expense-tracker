@@ -1,8 +1,8 @@
-import React, { useMemo } from "react";
 import PropTypes from "prop-types";
+import React, { useMemo } from "react";
 import useComputeTextColor from "../hooks/useComputeTextColor";
-import TimeValue from "./TimeValue";
 import { formatNumber } from "../utils";
+import TimeValue from "./TimeValue";
 
 function TransactionsListItem(props) {
   const categoryColor = useMemo(
@@ -35,7 +35,7 @@ function TransactionsListItem(props) {
         <div className="flex justify-between text-gray-500">
           {props.type === "transfer" ? (
             <div>
-              {props.account.name} -&gt; {props.transfered_to_account.name}
+              {props.account.name} -&gt; {props.transferred_to_account.name}
             </div>
           ) : (
             <div>{props.account.name}</div>
@@ -58,8 +58,8 @@ TransactionsListItem.propTypes = {
   category: PropTypes.object,
   description: PropTypes.string.isRequired,
   amount: PropTypes.number.isRequired,
-  transfered_to: PropTypes.number,
-  transfered_to_account: PropTypes.object,
+  transferred_to: PropTypes.number,
+  transferred_to_account: PropTypes.object,
   date: PropTypes.string.isRequired,
 };
 

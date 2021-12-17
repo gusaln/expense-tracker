@@ -41,7 +41,7 @@ transferRoutes.post('/',
         account_id: req.body.account_id,
         description: req.body.description,
         amount: req.body.amount,
-        transfered_to: req.body.transfered_to,
+        transferred_to: req.body.transferred_to,
         date: parseDate(req.body.date).toDate(),
       });
 
@@ -60,7 +60,7 @@ transferRoutes.put('/:transfer',
         account_id: req.body.account_id,
         description: req.body.description,
         amount: req.body.amount,
-        transfered_to: req.body.transfered_to,
+        transferred_to: req.body.transferred_to,
         date: parseDate(req.body.date).toDate(),
       });
 

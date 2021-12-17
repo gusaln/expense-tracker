@@ -25,6 +25,8 @@ async function httpRequest(url, options = undefined) {
         .forEach((errorObject) => {
           err.errors[errorObject.source.pointer.replace('/body/', '')] = errorObject.detail;
         });
+
+      console.log("Validation Errors", data.errors)
     }
 
     throw err;

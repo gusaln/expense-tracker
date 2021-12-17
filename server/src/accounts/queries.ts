@@ -4,9 +4,9 @@ import ApiError from '../errors/apiError';
 import ResourceNotFoundError from '../errors/resourceNotFoundError';
 import Money from '../support/money/money';
 import {
-    TRANSACTION_TYPE_EXPENSE,
-    TRANSACTION_TYPE_INCOME,
-    TRANSACTION_TYPE_TRANSFER
+  TRANSACTION_TYPE_EXPENSE,
+  TRANSACTION_TYPE_INCOME,
+  TRANSACTION_TYPE_TRANSFER
 } from '../transactions/constants';
 import { Account, AccountDbId, AccountDbRecord, AccountNew, AccountUpdate } from './types';
 
@@ -55,7 +55,9 @@ export const findAccountById = async (id: AccountDbId): Promise<Account> => {
  * @throws A ResourceNotFoundError error if the account does not exist.
  */
 export const findMultipleAccountsById = async (ids: AccountDbId | AccountDbId[]) => {
-  ids = Array.isArray(ids) ? ids : [ids];
+  ids = Array.from(
+    new Set(Array.isArray(ids) ? ids : [ids])
+  );
 
   ids.forEach((id) => {
     if (isInvalidId(id)) {
@@ -65,7 +67,7 @@ export const findMultipleAccountsById = async (ids: AccountDbId | AccountDbId[])
   const accounts = await db.from<AccountDbRecord>('accounts').whereIn('id', ids);
 
   if (accounts.length !== ids.length) {
-    throw new ResourceNotFoundError(`Account IDs ${ids} not found.`);
+    throw new ResourceNotFoundError(`Account IDs ${ids.join(',')} not found.`);
   }
 
   return accounts.map(transformDbRecordToAccount);
@@ -97,7 +99,7 @@ const computeAccountBalance = async (id: AccountDbId) => {
   const incomesAgg = await db.select({ income: db.raw('sum(amount)') })
     .from('transactions')
     .where((builder) => builder.where({ type: TRANSACTION_TYPE_INCOME, account_id: id }))
-    .orWhere({ transfered_to: id });
+    .orWhere({ transferred_to: id });
 
   const expensesAgg = await db.select({ expense: db.raw('sum(amount)') })
     .from('transactions')
@@ -144,7 +146,7 @@ export const deleteAccount = async (id: AccountDbId) => {
   const transactionsInCount = await db
     .from<AccountDbRecord>('transactions')
     .where('account_id', id)
-    .orWhere('transfered_to', id)
+    .orWhere('transferred_to', id)
     .count('id');
 
   if (transactionsInCount[0].count > 0) {
@@ -159,7 +161,7 @@ export const deleteAccount = async (id: AccountDbId) => {
  *
  * WARNING: This function does not check if the account exists.
  */
-export const addBalanceToAccount = async (id: AccountDbId, amount: number, trx: Knex.Transaction) => trx
+export const addBalanceToAccount = async (id: AccountDbId, amount: string | number, trx: Knex.Transaction) => trx
   .from<AccountDbRecord>('accounts')
   .where({ id })
   .update({
@@ -172,7 +174,7 @@ export const addBalanceToAccount = async (id: AccountDbId, amount: number, trx: 
  *
  * WARNING: This function does not check if the account exists.
  */
-export const subtractBalanceToAccount = async (id: AccountDbId, amount: number, trx: Knex.Transaction) => trx
+export const subtractBalanceToAccount = async (id: AccountDbId, amount: string | number, trx: Knex.Transaction) => trx
   .from<AccountDbRecord>('accounts')
   .where({ id })
   .update({

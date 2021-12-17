@@ -1,12 +1,12 @@
-import React, { useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
-import Card from "./Card";
-import TextInput from "./TextInput";
-import Select from "./Select";
-import Button from "./Button";
-import { parseDate } from "../utils";
-import useAccounts from "../hooks/useAccounts";
+import React, { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import useAccounts from "../hooks/useAccounts";
+import { parseDate } from "../utils";
+import Button from "./Button";
+import Card from "./Card";
+import Select from "./Select";
+import TextInput from "./TextInput";
 
 function mapError(errors, name) {
   if (errors[name]) {
@@ -21,7 +21,7 @@ function TransferForm(props) {
     const now = parseDate(new Date());
     const _original = {
       account_id: "",
-      transfered_to: "",
+      transferred_to: "",
       description: "",
       amount: "",
       date: now.format("YYYY-MM-DD"),
@@ -67,7 +67,7 @@ function TransferForm(props) {
     if (props.onSubmit) {
       props.onSubmit({
         account_id: data.account_id,
-        transfered_to: data.transfered_to,
+        transferred_to: data.transferred_to,
         description: data.description,
         amount: data.amount,
         date: parseDate(data.date + " " + data.time),
@@ -115,13 +115,13 @@ function TransferForm(props) {
           ) : (
             <Select
               label="To account"
-              name="transfered_to"
+              name="transferred_to"
               required
               options={accounts.map((a) => ({
                 name: `${a.name} (${a.current_balance.amount} ${a.current_balance.currency})`,
                 value: a.id,
               }))}
-              messages={mapError(errors, "transfered_to")}
+              messages={mapError(errors, "transferred_to")}
             />
           )}
           <TextInput

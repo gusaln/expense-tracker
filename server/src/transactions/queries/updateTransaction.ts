@@ -27,7 +27,7 @@ import { transformDbRecordToTransaction } from './transformDbRecordToTransaction
    throw new ApiError('Value of account_id is not a valid account ID.', 422);
  }
 
- const amountDiff = data.amount - oldData.amount;
+ const amountDiff = (data.amount as number) - (oldData.amount as number);
  const updatedRecords = data.type == 'transfer'
    ? await updateTransferTransaction(id, data as TransactionUpdate<TransferTransactionType>, amountDiff)
    : await updateIncomeOrExpenseTransaction(id, data as TransactionUpdate<IncomeOrExpenseTransactionType>, amountDiff);
@@ -68,8 +68,8 @@ const updateIncomeOrExpenseTransaction = async (
 };
 
 const updateTransferTransaction = async (id: TransactionDbId, data: TransactionUpdate<TransferTransactionType>, amountDiff: number) => {
- if (data.transfered_to && !await isValidAccountId(data.transfered_to)) {
-   throw new ApiError('Value of transfered_to is not a valid account ID.', 422);
+ if (data.transferred_to && !await isValidAccountId(data.transferred_to)) {
+   throw new ApiError('Value of transferred_to is not a valid account ID.', 422);
  }
 
  return await db.transaction(async (trx) => {
@@ -79,7 +79,7 @@ const updateTransferTransaction = async (id: TransactionDbId, data: TransactionU
      .update({
        account_id: data.account_id,
        description: data.description,
-       transfered_to: data.transfered_to,
+       transferred_to: data.transferred_to,
        amount: data.amount,
        date: parseDate(data.date).toDate(),
        updated_at: new Date(),
@@ -87,7 +87,7 @@ const updateTransferTransaction = async (id: TransactionDbId, data: TransactionU
      .returning('*');
 
    await subtractBalanceToAccount(data.account_id, amountDiff, trx);
-   await addBalanceToAccount(data.transfered_to, amountDiff, trx);
+   await addBalanceToAccount(data.transferred_to, amountDiff, trx);
 
    return t;
  });

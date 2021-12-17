@@ -18,7 +18,7 @@ function isValidSort(s?: string): boolean {
     'description',
     'amount',
     'category_id',
-    'transfered_to',
+    'transferred_to',
     'date',
     'created_at',
     'updated_at',
@@ -44,7 +44,7 @@ transactionRoutes.get('/', async (req, res, next) => {
         unique(
           transactions
             .map((t) => t.account_id)
-            .concat(transactions.map((t) => t.transfered_to) as number[])
+            .concat(transactions.map((t) => t.transferred_to) as number[])
             .filter((id) => id)
         )
       ),
@@ -65,7 +65,7 @@ transactionRoutes.get('/', async (req, res, next) => {
         // @ts-ignore
         category: categories[t.category_id],
         // @ts-ignore
-        transfered_to_account: accounts[t.transfered_to],
+        transferred_to_account: accounts[t.transferred_to],
       })),
       total: transactions.length,
     });

@@ -10,7 +10,7 @@ export function transformDbRecordToTransaction<T extends TransactionType>(dbTran
     description: dbTransaction.description,
     amount: Number(dbTransaction.amount),
     date: dbTransaction.date,
-    transfered_to: dbTransaction.transfered_to,
+    transferred_to: dbTransaction.transferred_to,
     created_at: dbTransaction.created_at,
     updated_at: dbTransaction.updated_at,
   } as TransactionOfType<T>;

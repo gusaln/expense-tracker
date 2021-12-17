@@ -19,8 +19,8 @@ export async function createTransaction<T extends TransactionType>(data: Transac
   }
 
   if (data.type == TRANSACTION_TYPE_TRANSFER) {
-    if (!await isValidAccountId(data.transfered_to)) {
-      throw new ApiError('Value of transfered_to is not a valid account ID.', 422);
+    if (!await isValidAccountId(data.transferred_to)) {
+      throw new ApiError('Value of transferred_to is not a valid account ID.', 422);
     }
   } else {
     if (!await isValidCategoryId(data.category_id)) {
@@ -40,7 +40,7 @@ export async function createTransaction<T extends TransactionType>(data: Transac
 
       case TRANSACTION_TYPE_TRANSFER:
         await subtractBalanceToAccount(data.account_id, data.amount, trx);
-        await addBalanceToAccount(data.transfered_to as AccountDbId, data.amount, trx);
+        await addBalanceToAccount(data.transferred_to as AccountDbId, data.amount, trx);
         break;
 
       default:
@@ -54,7 +54,7 @@ export async function createTransaction<T extends TransactionType>(data: Transac
         account_id: data.account_id,
         category_id: data.category_id,
         description: data.description,
-        transfered_to: data.transfered_to,
+        transferred_to: data.transferred_to,
         amount: data.amount,
         date: parseDate(data.date).toDate(),
       } as TransactionDbRecord<T>)

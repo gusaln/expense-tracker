@@ -45,7 +45,7 @@ export interface Transaction<TType  extends TransactionType = TransactionType> e
 > {
   type: TType,
   category_id: TType extends IncomeOrExpenseTransactionType ? CategoryDbId : undefined,
-  transfered_to: TType extends TransferTransactionType ? AccountDbId : undefined
+  transferred_to: TType extends TransferTransactionType ? AccountDbId : undefined
   date: Date,
   created_at: Date,
   updated_at: Date,
@@ -64,7 +64,7 @@ export type TransactionNew<TType extends TransactionType= TransactionType> = {
   type: TType,
   account_id: AccountDbId,
   category_id: TType extends IncomeOrExpenseTransactionType ? CategoryDbId : undefined,
-  transfered_to: TType extends TransferTransactionType ? AccountDbId : undefined
+  transferred_to: TType extends TransferTransactionType ? AccountDbId : undefined
 }
   & Pick<Transaction, 'date' | 'description' | 'amount'>
 
@@ -72,7 +72,7 @@ export type TransactionUpdate<TType extends TransactionType= TransactionType> = 
   type: TType,
   account_id: AccountDbId,
   category_id: TType extends IncomeOrExpenseTransactionType ? CategoryDbId : undefined,
-  transfered_to: TType extends TransferTransactionType ? AccountDbId : undefined
+  transferred_to: TType extends TransferTransactionType ? AccountDbId : undefined
 }
   & Pick<Transaction, 'date' | 'description' | 'amount'>
 
@@ -92,6 +92,6 @@ export type TransactionDbRecord<TType extends TransactionType = TransactionType>
   type: TType,
   account_id: AccountDbId,
   category_id: TType extends typeof TRANSACTION_TYPE_TRANSFER ? undefined : CategoryDbId,
-  transfered_to: TType extends typeof TRANSACTION_TYPE_TRANSFER ? AccountDbId : undefined
+  transferred_to: TType extends typeof TRANSACTION_TYPE_TRANSFER ? AccountDbId : undefined
 }
-  & Omit<Transaction, 'id' | 'type' | 'account_id' | 'category_id' | 'transfered_to'>
+  & Omit<Transaction, 'id' | 'type' | 'account_id' | 'category_id' | 'transferred_to'>

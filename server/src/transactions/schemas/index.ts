@@ -16,21 +16,21 @@ export const IncomeTransactionSchema = Type.Object({
   ...BaseTransactionSchemaProperties,
   type: Type.Literal(TRANSACTION_TYPE_INCOME),
   category_id: IntegerType,
-  // transfered_to: Type.Optional(Type.Null()),
+  // transferred_to: Type.Optional(Type.Null()),
 }, { $id: 'IncomeTransaction' });
 
 export const ExpenseTransactionSchema = Type.Object({
   ...BaseTransactionSchemaProperties,
   type: Type.Literal(TRANSACTION_TYPE_EXPENSE),
   category_id: IntegerType,
-  // transfered_to: Type.Optional(Type.Null()),
+  // transferred_to: Type.Optional(Type.Null()),
 }, { $id: 'ExpenseTransaction' });
 
 export const TransferTransactionSchema = Type.Object({
   ...BaseTransactionSchemaProperties,
   type: Type.Literal(TRANSACTION_TYPE_TRANSFER),
   // category_id: Type.Optional(Type.Null()),
-  transfered_to: IntegerType,
+  transferred_to: IntegerType,
 }, { $id: 'TransferTransaction' });
 
 export const TransactionSchema = Type.Object({
@@ -41,5 +41,5 @@ export const TransactionSchema = Type.Object({
     Type.Literal(TRANSACTION_TYPE_TRANSFER),
   ]),
   category_id: Type.Optional(IntegerType),
-  transfered_to: Type.Optional(IntegerType),
+  transferred_to: Type.Optional(IntegerType),
 }, { $id: 'Transaction' });
