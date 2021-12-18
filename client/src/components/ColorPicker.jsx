@@ -1,27 +1,22 @@
+import PropTypes from "prop-types";
 import React, {
   useCallback,
   useEffect,
   useMemo,
   useRef,
-  useState,
+  useState
 } from "react";
-import PropTypes from "prop-types";
-import colorsMap from "../colors";
 import { useFormContext } from "react-hook-form";
+import { colorList } from "../colors";
 import useComputeTextColor from "../hooks/useComputeTextColor";
 import { classname } from "../utils";
-
-const colors = Object.entries(colorsMap).reduce(
-  (prev, [, tones]) => prev.concat(Object.values(tones)),
-  []
-);
 
 function ColorPickerPanel(props) {
   const { value, onClosePanel, onCancelClosePanel, onValueSelected } = props;
 
   const colorListContent = useMemo(
     () =>
-      colors.map((color) => (
+    colorList.map((color) => (
         <li
           id={`color-${color.replace("#", "")}`}
           role="menuitem"
@@ -136,7 +131,7 @@ function ColorPicker(props) {
                 {internalValue}
               </span>
               <button
-                className="inline-block w-6 h-6 rounded-full bg-gray-900 text-gray-100"
+                className="inline-block w-6 h-6 rounded-full bg-charcoal text-paper"
                 onClick={handleValueClear}
               >
                 <span className="material-icons">close</span>

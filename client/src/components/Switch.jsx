@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import PropTypes from "prop-types";
+import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { classname } from "../utils";
 
@@ -24,7 +24,7 @@ function Switch(props) {
 
         <div className="h-full flex justify-center items-center flex-grow">
           <div
-            className="relative w-12 h-6 rounded-full border-2 border-gray-300 bg-gray-100"
+            className="relative w-12 h-6 rounded-full border-2 border-gray-300 bg-paper"
 
             onClick={() => setValue(name, !internalValue)}
           >
@@ -34,7 +34,7 @@ function Switch(props) {
                   "translate-x-full": internalValue,
                   "": !internalValue,
                 },
-                "absolute  w-6 h-6 rounded-full bg-gray-900 transform transition-all duration-500"
+                "absolute w-6 h-6 rounded-full bg-charcoal transform transition-all duration-500"
               )}
             />
           </div>

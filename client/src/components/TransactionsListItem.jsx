@@ -1,18 +1,16 @@
 import PropTypes from "prop-types";
-import React, { useMemo } from "react";
+import React from "react";
+import { paperDark } from "../colors";
 import useComputeTextColor from "../hooks/useComputeTextColor";
 import { formatNumber } from "../utils";
 import TimeValue from "./TimeValue";
 
 function TransactionsListItem(props) {
-  const categoryColor = useMemo(
-    () => (props.type === "transfer" ? "#c0c0c0" : props.category.color),
-    [props.type, props.category]
-  );
-  const categoryStyle = useComputeTextColor(categoryColor);
+  const categoryBgColor = props.type === "transfer" ? paperDark : props.category.color;
+  const categoryStyle = useComputeTextColor(categoryBgColor, `trans item ${props.type} ${props.amount}`);
 
   return (
-    <div className="flex rounded-md p-2 hover:bg-gray-50 transition duration-200 ease-in-out">
+    <div className="flex rounded-md p-2 hover:bg-paper-light transition duration-200 ease-in-out">
       <div>
         <div
           className="h-10 w-10 mr-2 mt-1 pt-2 rounded-lg text-center"

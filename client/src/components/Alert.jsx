@@ -1,5 +1,5 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 
 const boxColorMap = {
   success: "bg-green-500",
@@ -15,7 +15,7 @@ const closeBtnColorMap = {
 
 function Alert(props) {
   const boxClasses =
-    "flex justify-between mb-6 rounded-md p-4 text-gray-100 " +
+    "flex justify-between mb-6 rounded-md p-4 text-paper " +
     boxColorMap[props.type];
 
   const closeBtnClasses =

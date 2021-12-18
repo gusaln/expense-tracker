@@ -2,7 +2,7 @@
 
 @layer base {
   html {
-    @apply min-h-screen font-mono text-gray-900;
+    @apply min-h-screen font-mono text-charcoal;
   }
 }
 

@@ -1,16 +1,16 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 
 function BaseButton(props) {
   const { text, small, onClick, normalClasses, textClasses, disabledClasses, ...rest } = props;
   const classes = ["flex justify-center items-center rounded-md transition duration-200 ease-in-out"];
 
   if (props.disabled) {
-    classes.push(disabledClasses || "text-gray-100 bg-gray-500");
+    classes.push(disabledClasses || "text-paper bg-gray-500");
   } else if (text) {
-    classes.push(textClasses || "text-gray-900 hover:bg-gray-300");
+    classes.push(textClasses || "text-charcoal hover:bg-gray-300");
   } else {
-    classes.push(normalClasses || "text-gray-100 bg-gray-900 hover:bg-gray-700");
+    classes.push(normalClasses || "text-paper bg-charcoal hover:bg-gray-700");
   }
   classes.push(small ? "p-1 text-sm" : "p-2");
 

@@ -1,14 +1,14 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import BaseButton from "./BaseButton";
 
 function Button(props) {
   return (
     <BaseButton
       {...props}
-      normalClasses="text-gray-100 bg-gray-900 hover:bg-gray-700"
-      textClasses="text-gray-900 hover:bg-gray-300"
-      disabledClasses="text-gray-100 bg-gray-500"
+      normalClasses="text-paper bg-charcoal hover:bg-gray-700"
+      textClasses="text-charcoal hover:bg-gray-300"
+      disabledClasses="text-paper bg-gray-500"
     />
   );
 }

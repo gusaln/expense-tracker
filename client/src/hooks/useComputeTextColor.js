@@ -1,34 +1,41 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { colorMap } from "../colors";
 import { computeBrightnessFromRGB } from "../utils";
 
 const PATTERN = /[#]([0-9a-f]{3}|[0-9a-f]{6})/i.compile();
+const DARK_TEXT_COLOR = colorMap.gray[800]
+const LIGHT_TEXT_COLOR = colorMap.gray[50]
 
 /**
  * Chooses a contrasting text color for a given background color.
  *
  * @param {string} color
- * @returns {object} a style object with the background color given and the computed text color
+ * @returns {Record<string,string>} a style object with the background color given and the computed text color
  */
-export default function useComputeTextColor(color) {
+export default function useComputeTextColor(color, tag = null) {
   const [style, setStyle] = useState({
     backgroundColor: color,
-    color: "black",
+    color: DARK_TEXT_COLOR,
   });
 
   useEffect(() => {
     const _color =
       typeof color === "string" && PATTERN.test(String(color))
         ? color
-        : "#ffffff";
+        : LIGHT_TEXT_COLOR;
     const colorLuminance = computeBrightnessFromRGB(_color);
-    // const blackLuminance = computeLuminanceFromRGB("#000");
-    // const whiteLuminance = computeLuminanceFromRGB("#ffffff");
+    const darkLuminance = computeBrightnessFromRGB(DARK_TEXT_COLOR);
+    // const lightLuminance = computeBrightnessFromRGB(LIGHT_TEXT_COLOR);
 
-    // https://www.w3.org/TR/AERT/#color-contrast suggests a maximun brightness difference of 125
-    // Note that the brightness of black is 0 so the brightness of a color is its own difference from black
-    const textColor = colorLuminance >= 125 ? "black" : "white";
+    // console.log(tag, {
+    //   colorLuminance,
+    //   darkLuminance,
+    //   lightLuminance
+    // })
 
-    // console.log("useComputeTextColor", {colorLuminance, blackLuminance, whiteLuminance, color, _color, textColor})
+    // https://www.w3.org/TR/AERT/#color-contrast suggests a maximum brightness difference of 125
+    const textColor = (colorLuminance-darkLuminance) >= 125 ? DARK_TEXT_COLOR : LIGHT_TEXT_COLOR;
+
     setStyle({ backgroundColor: _color, color: textColor });
   }, [color]);
 

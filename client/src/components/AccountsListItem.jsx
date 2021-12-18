@@ -1,5 +1,5 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 import useComputeTextColor from "../hooks/useComputeTextColor";
 import { formatNumber } from "../utils";
 
