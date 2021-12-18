@@ -50,13 +50,13 @@ function TransactionsListItem(props) {
 TransactionsListItem.propTypes = {
   // id: PropTypes.string,
   type: PropTypes.oneOf(["income", "expense", "transfer"]).isRequired,
-  account_id: PropTypes.number.isRequired,
+  account_id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   account: PropTypes.object.isRequired,
-  category_id: PropTypes.number,
+  category_id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   category: PropTypes.object,
   description: PropTypes.string.isRequired,
   amount: PropTypes.number.isRequired,
-  transferred_to: PropTypes.number,
+  transferred_to: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   transferred_to_account: PropTypes.object,
   date: PropTypes.string.isRequired,
 };

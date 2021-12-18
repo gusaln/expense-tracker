@@ -8,17 +8,20 @@ function AccountsListItem(props) {
 
   return (
     <button
-      className="w-full flex justify-between items-center rounded-md px-4"
+      className="w-full rounded-md shadow-sm px-4 py-4"
       style={buttonStyle}
       onClick={props.onClick}
     >
-      <div className="h-20 flex items-center space-x-2">
-        <span>{props.name}</span>
-        <span className="material-icons -mt-1">{props.icon}</span>
+      <div className="flex justify-between pb-2 text-lg text-left">
+        {props.name}
+
+        <span className="text-xl">
+          {formatNumber(props.current_balance.amount)}
+        </span>
       </div>
 
-      <div>
-        {formatNumber(props.current_balance.amount)}
+      <div className="flex justify-end">
+        <span className="material-icons">{props.icon}</span>
       </div>
     </button>
   );

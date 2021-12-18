@@ -7,14 +7,14 @@ function CategoriesListItem(props) {
 
   return (
     <button
-      className="w-full flex justify-between items-center rounded-md px-4"
+      className="w-full rounded-md shadow-sm px-4 py-4"
       style={buttonStyle}
       onClick={props.onClick}
     >
-      <div className="h-20 flex flex-wrap items-center space-x-2">
-        <span>{props.name}</span>
-        <span className="material-icons -mt-1">{props.icon}</span>
-      </div>
+        <div className="pb-2 text-left">{props.name}</div>
+        <div className="flex justify-end">
+          <span className="material-icons">{props.icon}</span>
+        </div>
     </button>
   );
 }
