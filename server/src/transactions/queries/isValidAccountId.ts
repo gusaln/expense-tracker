@@ -1,6 +1,6 @@
-import { findAccountById } from '../../accounts/queries';
-import { AccountDbId } from '../../accounts/types';
-import ResourceNotFoundError from '../../errors/resourceNotFoundError';
+import { findAccountById } from "../../accounts/queries";
+import { AccountDbId } from "../../accounts/types";
+import ResourceNotFoundError from "../../errors/resourceNotFoundError";
 
 /**
  * Checks if an account exists by its Id.

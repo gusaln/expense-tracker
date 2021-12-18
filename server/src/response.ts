@@ -1,8 +1,8 @@
 // import { ValidationResult } from 'fastify';
 // import { FastifyError } from 'fastify-error';
-import { ErrorObject } from 'ajv';
-import BaseError from './errors/baseError';
-import ValidationError from './validation/validationError';
+import { ErrorObject } from "ajv";
+import BaseError from "./errors/baseError";
+import ValidationError from "./validation/validationError";
 
 export interface DataResponse<T = unknown> {
   data: T;
@@ -21,30 +21,30 @@ interface ErrorPayload {
     /** A JSON Pointer [RFC6901](https://datatracker.ietf.org/doc/html/rfc6901) */
     pointer?: string;
     parameter?: string;
-  },
-  meta?: Record<string, unknown>
+  };
+  meta?: Record<string, unknown>;
 }
 
 interface ValidationErrorObject extends ErrorPayload {
-  status: '422',
+  status: "422";
   meta?: {
     /**
      * The condition that was satisfied.
      *
      * Ex: maxLenth, minLenth, etc.
      */
-    rule: string,
+    rule: string;
     /**
      * The parameters for the condition.
      *
      * Ex: In case of maxLenth or minLenth, the `limit`
      */
-    params: Record<string, unknown>,
+    params: Record<string, unknown>;
     /**
      * The URI of the schema rule.
      */
-    schemaPath: string,
-  }
+    schemaPath: string;
+  };
 }
 
 /** @see https://jsonapi.org/format */
@@ -52,9 +52,9 @@ export type Response = DataResponse | ErrorResponse;
 
 function mapValidationResult(result: ErrorObject): ValidationErrorObject {
   return {
-    title: 'Validation error',
-    detail: result.message || 'The data provided was invalid',
-    status: '422',
+    title: "Validation error",
+    detail: result.message || "The data provided was invalid",
+    status: "422",
     source: {
       pointer: result.instancePath,
     },
@@ -88,9 +88,9 @@ function createErrorResponse(err: Error): Response {
   return {
     errors: [
       {
-        title: 'An error ocurred',
+        title: "An error ocurred",
         detail: err.message,
-        status: '500',
+        status: "500",
       },
     ],
   };

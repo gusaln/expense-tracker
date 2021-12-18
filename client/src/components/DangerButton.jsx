@@ -11,7 +11,6 @@ function DangerButton(props) {
       disabledClasses="text-paper bg-paper-light"
     />
   );
-
 }
 
 DangerButton.propTypes = {

@@ -1,7 +1,7 @@
-import db, { isInvalidId } from '../../db';
-import ResourceNotFoundError from '../../errors/resourceNotFoundError';
-import { Transaction, TransactionDbId } from '../types';
-import { transformDbRecordToTransaction } from './transformDbRecordToTransaction';
+import db, { isInvalidId } from "../../db";
+import ResourceNotFoundError from "../../errors/resourceNotFoundError";
+import { Transaction, TransactionDbId } from "../types";
+import { transformDbRecordToTransaction } from "./transformDbRecordToTransaction";
 
 /**
  * Finds an transactions by its id
@@ -14,7 +14,7 @@ export async function findTransactionById(id: TransactionDbId): Promise<Transact
     throw new ResourceNotFoundError(`Transaction ID ${id} not found.`);
   }
 
-  const transactions = await db.table('transactions').where({ id }).limit(1);
+  const transactions = await db.table("transactions").where({ id }).limit(1);
 
   if (transactions.length === 0) {
     throw new ResourceNotFoundError(`Transaction ID ${id} not found.`);

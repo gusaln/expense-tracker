@@ -1,17 +1,17 @@
-import { Type } from '@sinclair/typebox';
-import { NextFunction, Router } from 'express';
-import validate from '../middlewares/validate.middleware';
-import { IntegerType } from '../types';
-import { createAccount, deleteAccount, findAccountById, listAccounts, updateAccount } from './queries';
-import AccountNewSchema from './schemas/accountNew.schema';
-import AccountUpdateSchema from './schemas/accountUpdate.schema';
+import { Type } from "@sinclair/typebox";
+import { NextFunction, Router } from "express";
+import validate from "../middlewares/validate.middleware";
+import { IntegerType } from "../types";
+import { createAccount, deleteAccount, findAccountById, listAccounts, updateAccount } from "./queries";
+import AccountNewSchema from "./schemas/accountNew.schema";
+import AccountUpdateSchema from "./schemas/accountUpdate.schema";
 
 const ParamsSchema = Type.Object({ account: IntegerType });
 
 const accountRoutes = Router();
 
 // List accounts handler
-accountRoutes.get('/', async (_, res, next) => {
+accountRoutes.get("/", async (_, res, next) => {
   try {
     const accounts = await listAccounts();
 
@@ -25,7 +25,7 @@ accountRoutes.get('/', async (_, res, next) => {
 });
 
 // Get an account handler
-accountRoutes.get('/:account', async (req, res, next) => {
+accountRoutes.get("/:account", async (req, res, next) => {
   try {
     const account = await findAccountById(req.params.account);
 
@@ -37,7 +37,7 @@ accountRoutes.get('/:account', async (req, res, next) => {
 
 // Create accounts handler
 accountRoutes.post(
-  '/',
+  "/",
   validate({ body: AccountNewSchema }),
   async (req, res, next: NextFunction) => {
     try {
@@ -57,7 +57,7 @@ accountRoutes.post(
 
 // Edit account handler
 accountRoutes.put(
-  '/:account',
+  "/:account",
   validate({ params: ParamsSchema, body: AccountUpdateSchema }),
   async (req, res, next) => {
     try {
@@ -75,17 +75,14 @@ accountRoutes.put(
 );
 
 // Delete account handler
-accountRoutes.delete(
-  '/:account',
-  async (req, res, next) => {
-    try {
-      await deleteAccount(req.params.account);
+accountRoutes.delete("/:account", async (req, res, next) => {
+  try {
+    await deleteAccount(req.params.account);
 
-      res.status(204).json();
-    } catch (error) {
-      next(error);
-    }
+    res.status(204).json();
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 export default accountRoutes;

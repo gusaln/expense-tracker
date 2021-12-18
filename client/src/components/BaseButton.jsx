@@ -3,7 +3,9 @@ import React from "react";
 
 function BaseButton(props) {
   const { text, small, onClick, normalClasses, textClasses, disabledClasses, ...rest } = props;
-  const classes = ["flex justify-center items-center rounded-md transition duration-200 ease-in-out"];
+  const classes = [
+    "flex justify-center items-center rounded-md transition duration-200 ease-in-out",
+  ];
 
   if (props.disabled) {
     classes.push(disabledClasses || "text-paper bg-gray-500");
@@ -15,11 +17,7 @@ function BaseButton(props) {
   classes.push(small ? "p-1 text-sm" : "p-2");
 
   return (
-    <button
-      {...rest}
-      onClick={props.disabled ? undefined : onClick}
-      className={classes.join(" ")}
-    >
+    <button {...rest} onClick={props.disabled ? undefined : onClick} className={classes.join(" ")}>
       {props.children}
     </button>
   );

@@ -1,4 +1,4 @@
-import { Big } from 'big.js';
+import { Big } from "big.js";
 
 /**
  * Represents a currency

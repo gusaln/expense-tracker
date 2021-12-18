@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 function CategoriesList(props) {
   if (props.categories.length === 0) {
-    return <div>There are no categories.</div>
+    return <div>There are no categories.</div>;
   }
 
   return (

@@ -1,10 +1,14 @@
-import { addBalanceToAccount, subtractBalanceToAccount } from '../../accounts/queries';
-import { AccountDbId } from '../../accounts/types';
-import db from '../../db';
-import ResourceNotFoundError from '../../errors/resourceNotFoundError';
-import { TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME, TRANSACTION_TYPE_TRANSFER } from '../constants';
-import { TransactionDbId, TransactionType } from '../types';
-import { findTransactionById } from './findTransactionById';
+import { addBalanceToAccount, subtractBalanceToAccount } from "../../accounts/queries";
+import { AccountDbId } from "../../accounts/types";
+import db from "../../db";
+import ResourceNotFoundError from "../../errors/resourceNotFoundError";
+import {
+  TRANSACTION_TYPE_EXPENSE,
+  TRANSACTION_TYPE_INCOME,
+  TRANSACTION_TYPE_TRANSFER,
+} from "../constants";
+import { TransactionDbId, TransactionType } from "../types";
+import { findTransactionById } from "./findTransactionById";
 
 /**
  * Deletes a transaction
@@ -23,13 +27,11 @@ export async function deleteTransaction(id: TransactionDbId, type?: TransactionT
   }
 
   db.transaction(async (trx) => {
-    await trx.table('transactions').where({ id }).del();
+    await trx.table("transactions").where({ id }).del();
 
     switch (transaction.type) {
       case TRANSACTION_TYPE_INCOME:
-        await subtractBalanceToAccount(
-          transaction.account_id, transaction.amount, trx
-        );
+        await subtractBalanceToAccount(transaction.account_id, transaction.amount, trx);
         break;
 
       case TRANSACTION_TYPE_EXPENSE:
@@ -38,7 +40,11 @@ export async function deleteTransaction(id: TransactionDbId, type?: TransactionT
 
       case TRANSACTION_TYPE_TRANSFER:
         await addBalanceToAccount(transaction.account_id, transaction.amount, trx);
-        await subtractBalanceToAccount(transaction.transferred_to as AccountDbId, transaction.amount, trx);
+        await subtractBalanceToAccount(
+          transaction.transferred_to as AccountDbId,
+          transaction.amount,
+          trx
+        );
         break;
 
       default:

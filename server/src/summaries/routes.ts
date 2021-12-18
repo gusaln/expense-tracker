@@ -1,10 +1,10 @@
-import { Router } from 'express';
-import { parseDate } from '../utils/date';
-import { getBalancesByCurrency, getExpenseReport, getIncomeReport } from './queries';
+import { Router } from "express";
+import { parseDate } from "../utils/date";
+import { getBalancesByCurrency, getExpenseReport, getIncomeReport } from "./queries";
 
 const summaryRoutes = Router();
 
-summaryRoutes.get('/transactions', async (req, res, next) => {
+summaryRoutes.get("/transactions", async (req, res, next) => {
   try {
     const after = parseDate(req.query.after as string).toDate();
     const before = parseDate(req.query.before as string).toDate();
@@ -25,19 +25,19 @@ summaryRoutes.get('/transactions', async (req, res, next) => {
       data: {
         incomes: incomesByCurrency,
         expenses: expensesByCurrency,
-      }
+      },
     });
   } catch (error) {
     next(error);
   }
 });
 
-summaryRoutes.get('/balance_by_currency', async (_, res, next) => {
+summaryRoutes.get("/balance_by_currency", async (_, res, next) => {
   try {
     const balances = await getBalancesByCurrency();
 
     res.json({
-      data: { balances }
+      data: { balances },
     });
   } catch (error) {
     next(error);

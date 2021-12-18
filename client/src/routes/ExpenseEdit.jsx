@@ -54,7 +54,7 @@ export default function ExpenseEdit() {
       deleteExpense(expense.id)
         .then(() => {
           setSuccess("Expense deleted!");
-          history.push("/")
+          history.push("/");
         })
         .catch((err) => setError(err))
         .finally(() => {

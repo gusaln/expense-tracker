@@ -61,7 +61,11 @@ export default function AccountCreate() {
         </Link>
       </div>
 
-      <AccountForm title="Add a account" onSubmit={handleSubmit} errors={error ? error.errors : null} />
+      <AccountForm
+        title="Add a account"
+        onSubmit={handleSubmit}
+        errors={error ? error.errors : null}
+      />
     </div>
   );
 }

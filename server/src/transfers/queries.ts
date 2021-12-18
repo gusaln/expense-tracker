@@ -1,13 +1,20 @@
-import db, { isInvalidId } from '../db';
-import ResourceNotFoundError from '../errors/resourceNotFoundError';
-import { TRANSACTION_TYPE_TRANSFER } from '../transactions/constants';
-import { createTransaction, deleteTransaction, listTransactions, updateTransaction } from '../transactions/queries';
-import { TransactionDbRecord, TransactionNew, TransferTransaction } from '../transactions/types';
-import { Transfer, TransferDbId, TransferNew, TransferUpdate } from './types';
+import db, { isInvalidId } from "../db";
+import ResourceNotFoundError from "../errors/resourceNotFoundError";
+import { TRANSACTION_TYPE_TRANSFER } from "../transactions/constants";
+import {
+  createTransaction,
+  deleteTransaction,
+  listTransactions,
+  updateTransaction,
+} from "../transactions/queries";
+import { TransactionDbRecord, TransactionNew, TransferTransaction } from "../transactions/types";
+import { Transfer, TransferDbId, TransferNew, TransferUpdate } from "./types";
 
 type TransferSelector = typeof TRANSACTION_TYPE_TRANSFER;
 
-const transformDbRecordToTransfer = (dbTransfer: TransactionDbRecord<TransferSelector>): Transfer => ({
+const transformDbRecordToTransfer = (
+  dbTransfer: TransactionDbRecord<TransferSelector>
+): Transfer => ({
   id: Number(dbTransfer.id),
   account_id: Number(dbTransfer.account_id),
   description: dbTransfer.description,
@@ -33,7 +40,10 @@ const transformTransferTransactionToTransfer = (dbTransfer: TransferTransaction)
  * Lists all the transfers
  */
 export const listTransfers = async (): Promise<Transfer[]> => {
-  const transfers = (await listTransactions({ type: TRANSACTION_TYPE_TRANSFER }, ['date', 'desc']) as TransferTransaction[]);
+  const transfers = (await listTransactions({ type: TRANSACTION_TYPE_TRANSFER }, [
+    "date",
+    "desc",
+  ])) as TransferTransaction[];
 
   return transfers.map(transformTransferTransactionToTransfer);
 };
@@ -48,7 +58,8 @@ export const findTransferById = async (id: TransferDbId): Promise<Transfer> => {
     throw new ResourceNotFoundError(`Transfer ID ${id} not found.`);
   }
 
-  const transfer = await db.from<TransactionDbRecord<'transfer'>>('transactions')
+  const transfer = await db
+    .from<TransactionDbRecord<"transfer">>("transactions")
     .where({ id, type: TRANSACTION_TYPE_TRANSFER })
     .first();
 
@@ -70,7 +81,7 @@ export const createTransfer = async (data: TransferNew): Promise<Transfer> => {
     description: data.description,
     amount: data.amount,
     date: data.date,
-  } as TransactionNew<'transfer'>);
+  } as TransactionNew<"transfer">);
 
   return transformTransferTransactionToTransfer(newTransfer);
 };
@@ -82,16 +93,13 @@ export const createTransfer = async (data: TransferNew): Promise<Transfer> => {
  */
 export const updateTransfer = async (id: TransferDbId, data: TransferUpdate): Promise<Transfer> => {
   try {
-    const updatedTransfer = await updateTransaction(
-      id,
-      {
-        account_id: data.account_id,
-        description: data.description,
-        amount: data.amount,
-        transferred_to: data.transferred_to,
-        date: data.date,
-      } as TransactionNew<'transfer'>
-    );
+    const updatedTransfer = await updateTransaction(id, {
+      account_id: data.account_id,
+      description: data.description,
+      amount: data.amount,
+      transferred_to: data.transferred_to,
+      date: data.date,
+    } as TransactionNew<"transfer">);
     return transformTransferTransactionToTransfer(updatedTransfer);
   } catch (error) {
     if (error instanceof ResourceNotFoundError) {

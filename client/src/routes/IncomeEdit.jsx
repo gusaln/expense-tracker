@@ -54,7 +54,7 @@ export default function IncomeEdit() {
       deleteIncome(income.id)
         .then(() => {
           setSuccess("Income deleted!");
-          history.push("/")
+          history.push("/");
         })
         .catch((err) => setError(err))
         .finally(() => {

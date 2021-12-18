@@ -21,11 +21,7 @@ export function parseDate(date) {
     return date.clone();
   }
 
-  if (
-    date instanceof Date ||
-    typeof date === "number" ||
-    !Number.isNaN(parseInt(date, 10))
-  ) {
+  if (date instanceof Date || typeof date === "number" || !Number.isNaN(parseInt(date, 10))) {
     return dayjs(date);
   }
 
@@ -223,8 +219,10 @@ export function formatNumber(number) {
 export function debounce(fn, delay) {
   let handler = null;
 
-  return function(...args) {
-    if(handler) clearTimeout(handler);
-    handler = setTimeout(() => {fn(...args)}, delay);
-  }
+  return function (...args) {
+    if (handler) clearTimeout(handler);
+    handler = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
 }

@@ -44,7 +44,6 @@ export default function CategoryEdit() {
       });
   }
 
-
   function confirmDeletion() {
     // eslint-disable-next-line no-restricted-globals
     if (confirm("Are you sure you want to delete this transaction?")) {
@@ -55,7 +54,7 @@ export default function CategoryEdit() {
       deleteCategory(category.id)
         .then(() => {
           setSuccess("Category deleted!");
-          history.push("/")
+          history.push("/");
         })
         .catch((err) => setError(err))
         .finally(() => {
@@ -111,7 +110,7 @@ export default function CategoryEdit() {
       </div>
 
       <CategoryEditForm
-        title={`Edit category ${category.for_expenses ? 'for expenses' : 'for incomes'}`}
+        title={`Edit category ${category.for_expenses ? "for expenses" : "for incomes"}`}
         buttonText="Edit"
         original={category}
         errors={error ? error.errors : null}

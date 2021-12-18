@@ -1,9 +1,14 @@
-import db, { isInvalidId } from '../db';
-import ResourceNotFoundError from '../errors/resourceNotFoundError';
-import { TRANSACTION_TYPE_EXPENSE } from '../transactions/constants';
-import { createTransaction, deleteTransaction, listTransactions, updateTransaction } from '../transactions/queries';
-import { ExpenseTransaction, TransactionDbRecord, TransactionNew } from '../transactions/types';
-import { Expense, ExpenseDbId, ExpenseNew, ExpenseUpdate } from './types';
+import db, { isInvalidId } from "../db";
+import ResourceNotFoundError from "../errors/resourceNotFoundError";
+import { TRANSACTION_TYPE_EXPENSE } from "../transactions/constants";
+import {
+  createTransaction,
+  deleteTransaction,
+  listTransactions,
+  updateTransaction,
+} from "../transactions/queries";
+import { ExpenseTransaction, TransactionDbRecord, TransactionNew } from "../transactions/types";
+import { Expense, ExpenseDbId, ExpenseNew, ExpenseUpdate } from "./types";
 
 type ExpenseSelector = typeof TRANSACTION_TYPE_EXPENSE;
 
@@ -33,7 +38,10 @@ const transformExpenseTransactionToExpense = (dbExpense: ExpenseTransaction): Ex
  * Lists all the expenses
  */
 export const listExpenses = async (): Promise<Expense[]> => {
-  const expenses = (await listTransactions({ type: TRANSACTION_TYPE_EXPENSE }, ['date', 'desc']) as ExpenseTransaction[]);
+  const expenses = (await listTransactions({ type: TRANSACTION_TYPE_EXPENSE }, [
+    "date",
+    "desc",
+  ])) as ExpenseTransaction[];
 
   return expenses.map(transformExpenseTransactionToExpense);
 };
@@ -48,7 +56,8 @@ export const findExpenseById = async (id: ExpenseDbId): Promise<Expense> => {
     throw new ResourceNotFoundError(`Expense ID ${id} not found.`);
   }
 
-  const expense = await db.from<TransactionDbRecord<'expense'>>('transactions')
+  const expense = await db
+    .from<TransactionDbRecord<"expense">>("transactions")
     .where({ id, type: TRANSACTION_TYPE_EXPENSE })
     .first();
 
@@ -70,7 +79,7 @@ export const createExpense = async (data: ExpenseNew): Promise<Expense> => {
     description: data.description,
     amount: data.amount,
     date: data.date,
-  } as TransactionNew<'expense'>);
+  } as TransactionNew<"expense">);
 
   return transformExpenseTransactionToExpense(newExpense);
 };
@@ -82,16 +91,13 @@ export const createExpense = async (data: ExpenseNew): Promise<Expense> => {
  */
 export const updateExpense = async (id: ExpenseDbId, data: ExpenseUpdate): Promise<Expense> => {
   try {
-    const updatedExpense = await updateTransaction(
-      id,
-      {
-        account_id: data.account_id,
-        category_id: data.category_id,
-        description: data.description,
-        amount: data.amount,
-        date: data.date,
-      } as TransactionNew<'expense'>
-      );
+    const updatedExpense = await updateTransaction(id, {
+      account_id: data.account_id,
+      category_id: data.category_id,
+      description: data.description,
+      amount: data.amount,
+      date: data.date,
+    } as TransactionNew<"expense">);
     return transformExpenseTransactionToExpense(updatedExpense);
   } catch (error) {
     if (error instanceof ResourceNotFoundError) {

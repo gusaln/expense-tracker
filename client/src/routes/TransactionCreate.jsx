@@ -56,28 +56,14 @@ export default function TransactionCreate() {
   function getForm() {
     switch (type) {
       case "income":
-        return (
-          <IncomeForm title="Add an income" onSubmit={handleSubmit} errors={error} />
-        );
+        return <IncomeForm title="Add an income" onSubmit={handleSubmit} errors={error} />;
 
       case "expense":
-        return (
-          <ExpenseForm
-            title="Add an expense"
-            onSubmit={handleSubmit}
-            errors={error}
-          />
-        );
+        return <ExpenseForm title="Add an expense" onSubmit={handleSubmit} errors={error} />;
 
       case "transfer":
       default:
-        return (
-          <TransferForm
-            title="Add a transfer"
-            onSubmit={handleSubmit}
-            errors={error}
-          />
-        );
+        return <TransferForm title="Add a transfer" onSubmit={handleSubmit} errors={error} />;
     }
   }
 
@@ -102,22 +88,13 @@ export default function TransactionCreate() {
         </Link>
 
         <div className="flex space-x-4">
-          <Button
-            disabled={type === "income"}
-            onClick={() => setType("income")}
-          >
+          <Button disabled={type === "income"} onClick={() => setType("income")}>
             Add income
           </Button>
-          <Button
-            disabled={type === "expense"}
-            onClick={() => setType("expense")}
-          >
+          <Button disabled={type === "expense"} onClick={() => setType("expense")}>
             Add expense
           </Button>
-          <Button
-            disabled={type === "transfer"}
-            onClick={() => setType("transfer")}
-          >
+          <Button disabled={type === "transfer"} onClick={() => setType("transfer")}>
             Transfer money
           </Button>
         </div>

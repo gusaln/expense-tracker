@@ -1,6 +1,6 @@
-import { Type } from '@sinclair/typebox';
-import { TransferTransactionSchema } from '../../transactions/schemas';
+import { Type } from "@sinclair/typebox";
+import { TransferTransactionSchema } from "../../transactions/schemas";
 
-const TransferSchema = Type.Omit(TransferTransactionSchema, ['type'], { $id: 'Transfer' });
+const TransferSchema = Type.Omit(TransferTransactionSchema, ["type"], { $id: "Transfer" });
 
 export default TransferSchema;

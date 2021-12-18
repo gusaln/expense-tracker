@@ -59,30 +59,10 @@ function CategoryEditForm(props) {
   return (
     <Card title={props.title}>
       <FormProvider {...methods}>
-        <form
-          className="space-y-4"
-          action=""
-          method="post"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <TextInput
-            label="Name"
-            name="name"
-            required
-            messages={mapError(errors, "name")}
-          />
-          <IconPicker
-            label="Icon"
-            name="icon"
-            required
-            messages={mapError(errors, "icon")}
-          />
-          <ColorPicker
-            label="Color"
-            name="color"
-            required
-            messages={mapError(errors, "color")}
-          />
+        <form className="space-y-4" action="" method="post" onSubmit={handleSubmit(onSubmit)}>
+          <TextInput label="Name" name="name" required messages={mapError(errors, "name")} />
+          <IconPicker label="Icon" name="icon" required messages={mapError(errors, "icon")} />
+          <ColorPicker label="Color" name="color" required messages={mapError(errors, "color")} />
 
           <div className="flex justify-end pt-4 space-x-4">
             <Button type="submit">{props.buttonText || "Create"}</Button>

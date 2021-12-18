@@ -1,6 +1,6 @@
-import { findCategoryById } from '../../categories/queries';
-import { CategoryDbId } from '../../categories/types';
-import ResourceNotFoundError from '../../errors/resourceNotFoundError';
+import { findCategoryById } from "../../categories/queries";
+import { CategoryDbId } from "../../categories/types";
+import ResourceNotFoundError from "../../errors/resourceNotFoundError";
 
 /**
  * Checks if a category exists by its Id.

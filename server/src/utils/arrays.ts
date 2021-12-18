@@ -1,9 +1,10 @@
-type GetterFn<T> = ((el: T) => string)
-type Getter<T> = (keyof T) | GetterFn<T>
+type GetterFn<T> = (el: T) => string;
+type Getter<T> = keyof T | GetterFn<T>;
 
-type Element = object
+type Element = object;
 
-const createGetter = <T>(getter: Getter<T>) => typeof getter === 'function' ? getter : (el: T) => String(el[getter]);
+const createGetter = <T>(getter: Getter<T>) =>
+  typeof getter === "function" ? getter : (el: T) => String(el[getter]);
 
 /**
  * Groups elements from a collection of elements
@@ -41,7 +42,7 @@ export function keyBy<T extends Element>(elements: T[], getter: Getter<T>) {
     const key = _getter(el);
     groups[key] = el;
     return groups;
-  }, {} as Record<string,T>);
+  }, {} as Record<string, T>);
 }
 
 /**

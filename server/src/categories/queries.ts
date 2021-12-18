@@ -1,7 +1,7 @@
-import db, { isInvalidId } from '../db';
-import ApiError from '../errors/apiError';
-import ResourceNotFoundError from '../errors/resourceNotFoundError';
-import { Category, CategoryDbId, CategoryDbRecord, CategoryNew, CategoryUpdate } from './types';
+import db, { isInvalidId } from "../db";
+import ApiError from "../errors/apiError";
+import ResourceNotFoundError from "../errors/resourceNotFoundError";
+import { Category, CategoryDbId, CategoryDbRecord, CategoryNew, CategoryUpdate } from "./types";
 
 const transformDbRecordToCategory = (dbCategory: CategoryDbRecord): Category => ({
   id: Number(dbCategory.id),
@@ -11,16 +11,16 @@ const transformDbRecordToCategory = (dbCategory: CategoryDbRecord): Category => 
   for_expenses: Boolean(dbCategory.for_expenses),
 });
 
-export type ListCategoriesFilters = {for_expenses?: boolean};
+export type ListCategoriesFilters = { for_expenses?: boolean };
 
 /**
  * Lists all the categories
  */
 export const listCategories = async (filters: ListCategoriesFilters = {}) => {
-  const builder = db.select().from<CategoryDbRecord>('categories');
+  const builder = db.select().from<CategoryDbRecord>("categories");
 
-  if (typeof filters.for_expenses === 'boolean') {
-    builder.where('for_expenses', filters.for_expenses);
+  if (typeof filters.for_expenses === "boolean") {
+    builder.where("for_expenses", filters.for_expenses);
   }
 
   return (await builder).map(transformDbRecordToCategory);
@@ -36,7 +36,7 @@ export const findCategoryById = async (id: CategoryDbId): Promise<Category> => {
     throw new ResourceNotFoundError(`Category ID ${id} not found.`);
   }
 
-  const category = await db.from<CategoryDbRecord>('categories').where({ id }).first();
+  const category = await db.from<CategoryDbRecord>("categories").where({ id }).first();
 
   if (!category) {
     throw new ResourceNotFoundError(`Category ID ${id} not found.`);
@@ -50,7 +50,9 @@ export const findCategoryById = async (id: CategoryDbId): Promise<Category> => {
  *
  * @throws {ResourceNotFoundError} if the category does not exist.
  */
-export const findMultipleCategoriesById = async (ids: CategoryDbId | CategoryDbId[]): Promise<Category[]> => {
+export const findMultipleCategoriesById = async (
+  ids: CategoryDbId | CategoryDbId[]
+): Promise<Category[]> => {
   ids = Array.isArray(ids) ? ids : [ids];
 
   ids.forEach((id) => {
@@ -58,7 +60,7 @@ export const findMultipleCategoriesById = async (ids: CategoryDbId | CategoryDbI
       throw new ResourceNotFoundError(`Category ID ${id} not found.`);
     }
   });
-  const categories = await db.from<CategoryDbRecord>('categories').whereIn('id', ids);
+  const categories = await db.from<CategoryDbRecord>("categories").whereIn("id", ids);
 
   if (categories.length !== ids.length) {
     throw new ResourceNotFoundError(`Category IDs ${ids} not found.`);
@@ -71,14 +73,15 @@ export const findMultipleCategoriesById = async (ids: CategoryDbId | CategoryDbI
  * Persistes an categories to the database
  */
 export const createCategory = async (data: CategoryNew): Promise<Category> => {
-  const newCategories = await db.from<CategoryDbRecord>('categories')
+  const newCategories = await db
+    .from<CategoryDbRecord>("categories")
     .insert({
       name: data.name,
       icon: data.icon,
       color: data.color,
       for_expenses: data.for_expenses,
     })
-    .returning('*');
+    .returning("*");
 
   return transformDbRecordToCategory(newCategories[0]);
 };
@@ -92,14 +95,15 @@ export const updateCategory = async (id: CategoryDbId, data: CategoryUpdate): Pr
   // Checks if category exists
   await findCategoryById(id);
 
-  const updatedCategories = await db.from<CategoryDbRecord>('categories')
+  const updatedCategories = await db
+    .from<CategoryDbRecord>("categories")
     .where({ id })
     .update({
       name: data.name,
       icon: data.icon,
       color: data.color,
     })
-    .returning('*');
+    .returning("*");
 
   return transformDbRecordToCategory(updatedCategories[0]);
 };
@@ -113,10 +117,12 @@ export const deleteCategory = async (id: CategoryDbId) => {
   // Checks if category exists
   await findCategoryById(id);
 
-  const transactionsInCount = await db.count('id').from('transactions').where('category_id', id);
+  const transactionsInCount = await db.count("id").from("transactions").where("category_id", id);
   if (transactionsInCount[0].count > 0) {
-    throw new ApiError('There are transactions in this category. As long as there are, the category can\'t be deleted.');
+    throw new ApiError(
+      "There are transactions in this category. As long as there are, the category can't be deleted."
+    );
   }
 
-  await db.from<CategoryDbRecord>('categories').where({ id }).del();
+  await db.from<CategoryDbRecord>("categories").where({ id }).del();
 };

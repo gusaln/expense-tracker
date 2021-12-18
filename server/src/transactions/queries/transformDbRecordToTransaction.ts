@@ -1,7 +1,8 @@
-import { TransactionDbRecord, TransactionOfType, TransactionType } from '../types';
+import { TransactionDbRecord, TransactionOfType, TransactionType } from "../types";
 
-export function transformDbRecordToTransaction<T extends TransactionType>(dbTransaction: TransactionDbRecord<T>)
-  : TransactionOfType<T>  {
+export function transformDbRecordToTransaction<T extends TransactionType>(
+  dbTransaction: TransactionDbRecord<T>
+): TransactionOfType<T> {
   return {
     id: Number(dbTransaction.id),
     type: dbTransaction.type,

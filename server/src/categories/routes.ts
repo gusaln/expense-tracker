@@ -1,18 +1,26 @@
-import { Type } from '@sinclair/typebox';
-import { Router } from 'express';
-import validate from '../middlewares/validate.middleware';
-import { createCategory, deleteCategory, findCategoryById, listCategories, ListCategoriesFilters, updateCategory } from './queries';
-import CategoryNewSchema from './schemas/categoryNew.schema';
-import CategoryUpdateSchema from './schemas/categoryUpdate.schema';
-import ListCategoriesFiltersSchema from './schemas/listCategoriesFilters.schema';
+import { Type } from "@sinclair/typebox";
+import { Router } from "express";
+import validate from "../middlewares/validate.middleware";
+import { IntegerType } from "../types";
+import {
+  createCategory,
+  deleteCategory,
+  findCategoryById,
+  listCategories,
+  ListCategoriesFilters,
+  updateCategory,
+} from "./queries";
+import CategoryNewSchema from "./schemas/categoryNew.schema";
+import CategoryUpdateSchema from "./schemas/categoryUpdate.schema";
+import ListCategoriesFiltersSchema from "./schemas/listCategoriesFilters.schema";
 
 const categoryRoutes = Router();
 
-const ParamsSchema = Type.Object({ category: Type.Number() });
+const ParamsSchema = Type.Object({ category: IntegerType });
 
 // List categories handler
 categoryRoutes.get(
-  '/',
+  "/",
   validate({ query: ListCategoriesFiltersSchema }),
   async (req, res, next) => {
     try {
@@ -21,16 +29,17 @@ categoryRoutes.get(
       if (req.query.for_expenses) {
         req.query.for_expenses = req.query.for_expenses.trim();
 
-        filters.for_expenses = req.query.for_expenses === ''
-          ? filters.for_expenses = undefined
-          : ['1', 'yes', 'true'].includes(req.query.for_expenses);
+        filters.for_expenses =
+          req.query.for_expenses === ""
+            ? (filters.for_expenses = undefined)
+            : ["1", "yes", "true"].includes(req.query.for_expenses);
       }
 
       const categories = await listCategories(filters);
 
       res.json({
         data: categories,
-        total: categories.length
+        total: categories.length,
       });
     } catch (error) {
       next(error);
@@ -39,7 +48,7 @@ categoryRoutes.get(
 );
 
 // Get a category handler
-categoryRoutes.get('/:category', async (req, res, next) => {
+categoryRoutes.get("/:category", async (req, res, next) => {
   try {
     const category = await findCategoryById(req.params.category);
 
@@ -50,28 +59,24 @@ categoryRoutes.get('/:category', async (req, res, next) => {
 });
 
 // Create categories handler
-categoryRoutes.post(
-  '/',
-  validate({ body: CategoryNewSchema }),
-  async (req, res, next) => {
-    try {
-      const category = await createCategory({
-        name: req.body.name,
-        icon: req.body.icon,
-        color: req.body.color,
-        for_expenses: Boolean(req.body.for_expenses)
-      });
+categoryRoutes.post("/", validate({ body: CategoryNewSchema }), async (req, res, next) => {
+  try {
+    const category = await createCategory({
+      name: req.body.name,
+      icon: req.body.icon,
+      color: req.body.color,
+      for_expenses: Boolean(req.body.for_expenses),
+    });
 
-      res.status(201).json({ data: category });
-    } catch (error) {
-      next(error);
-    }
+    res.status(201).json({ data: category });
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 // Edit category handler
 categoryRoutes.put(
-  '/:category',
+  "/:category",
   validate({ params: ParamsSchema, body: CategoryUpdateSchema }),
   async (req, res, next) => {
     try {
@@ -89,17 +94,14 @@ categoryRoutes.put(
 );
 
 // Delete category handler
-categoryRoutes.delete(
-  '/:category',
-  async (req, res, next) => {
-    try {
-      await deleteCategory(req.params.category);
+categoryRoutes.delete("/:category", async (req, res, next) => {
+  try {
+    await deleteCategory(req.params.category);
 
-      res.status(204).json();
-    } catch (error) {
-      next(error);
-    }
+    res.status(204).json();
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 export default categoryRoutes;

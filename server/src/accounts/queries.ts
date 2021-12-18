@@ -1,14 +1,14 @@
-import { Knex } from 'knex';
-import db, { isInvalidId } from '../db';
-import ApiError from '../errors/apiError';
-import ResourceNotFoundError from '../errors/resourceNotFoundError';
-import Money from '../support/money/money';
+import { Knex } from "knex";
+import db, { isInvalidId } from "../db";
+import ApiError from "../errors/apiError";
+import ResourceNotFoundError from "../errors/resourceNotFoundError";
+import Money from "../support/money/money";
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
-  TRANSACTION_TYPE_TRANSFER
-} from '../transactions/constants';
-import { Account, AccountDbId, AccountDbRecord, AccountNew, AccountUpdate } from './types';
+  TRANSACTION_TYPE_TRANSFER,
+} from "../transactions/constants";
+import { Account, AccountDbId, AccountDbRecord, AccountNew, AccountUpdate } from "./types";
 
 const transformDbRecordToAccount = (dbAccount: AccountDbRecord): Account => ({
   id: Number(dbAccount.id),
@@ -25,7 +25,7 @@ const transformDbRecordToAccount = (dbAccount: AccountDbRecord): Account => ({
  * Lists all the accounts
  */
 export const listAccounts = async () => {
-  const accounts = await db.select().from<AccountDbRecord>('accounts');
+  const accounts = await db.select().from<AccountDbRecord>("accounts");
 
   return accounts.map(transformDbRecordToAccount);
 };
@@ -40,7 +40,7 @@ export const findAccountById = async (id: AccountDbId): Promise<Account> => {
     throw new ResourceNotFoundError(`Account ID ${id} not found.`);
   }
 
-  const account = await db.from<AccountDbRecord>('accounts').where({ id }).first();
+  const account = await db.from<AccountDbRecord>("accounts").where({ id }).first();
 
   if (!account) {
     throw new ResourceNotFoundError(`Account ID ${id} not found.`);
@@ -55,19 +55,17 @@ export const findAccountById = async (id: AccountDbId): Promise<Account> => {
  * @throws A ResourceNotFoundError error if the account does not exist.
  */
 export const findMultipleAccountsById = async (ids: AccountDbId | AccountDbId[]) => {
-  ids = Array.from(
-    new Set(Array.isArray(ids) ? ids : [ids])
-  );
+  ids = Array.from(new Set(Array.isArray(ids) ? ids : [ids]));
 
   ids.forEach((id) => {
     if (isInvalidId(id)) {
       throw new ResourceNotFoundError(`Account ID ${id} not found.`);
     }
   });
-  const accounts = await db.from<AccountDbRecord>('accounts').whereIn('id', ids);
+  const accounts = await db.from<AccountDbRecord>("accounts").whereIn("id", ids);
 
   if (accounts.length !== ids.length) {
-    throw new ResourceNotFoundError(`Account IDs ${ids.join(',')} not found.`);
+    throw new ResourceNotFoundError(`Account IDs ${ids.join(",")} not found.`);
   }
 
   return accounts.map(transformDbRecordToAccount);
@@ -77,7 +75,8 @@ export const findMultipleAccountsById = async (ids: AccountDbId | AccountDbId[])
  * Persistes an accounts to the database
  */
 export const createAccount = async (data: AccountNew): Promise<Account> => {
-  const newAccounts = await db.from<AccountDbRecord>('accounts')
+  const newAccounts = await db
+    .from<AccountDbRecord>("accounts")
     .insert({
       name: data.name,
       icon: data.icon,
@@ -85,7 +84,7 @@ export const createAccount = async (data: AccountNew): Promise<Account> => {
       currency: data.currency.toUpperCase(),
       current_balance: 0,
     })
-    .returning('*');
+    .returning("*");
 
   return transformDbRecordToAccount(newAccounts[0]);
 };
@@ -96,14 +95,16 @@ export const createAccount = async (data: AccountNew): Promise<Account> => {
  * @private
  */
 const computeAccountBalance = async (id: AccountDbId) => {
-  const incomesAgg = await db.select({ income: db.raw('sum(amount)') })
-    .from('transactions')
+  const incomesAgg = await db
+    .select({ income: db.raw("sum(amount)") })
+    .from("transactions")
     .where((builder) => builder.where({ type: TRANSACTION_TYPE_INCOME, account_id: id }))
     .orWhere({ transferred_to: id });
 
-  const expensesAgg = await db.select({ expense: db.raw('sum(amount)') })
-    .from('transactions')
-    .whereIn('type', [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_TRANSFER])
+  const expensesAgg = await db
+    .select({ expense: db.raw("sum(amount)") })
+    .from("transactions")
+    .whereIn("type", [TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_TRANSFER])
     .where({ account_id: id });
 
   return incomesAgg[0].income - expensesAgg[0].expense;
@@ -120,7 +121,8 @@ export const updateAccount = async (id: AccountDbId, data: AccountUpdate) => {
 
   const balance = await computeAccountBalance(id);
 
-  const updatedAccounts = await db.from<AccountDbRecord>('accounts')
+  const updatedAccounts = await db
+    .from<AccountDbRecord>("accounts")
     .where({ id })
     .update({
       name: data.name,
@@ -129,7 +131,7 @@ export const updateAccount = async (id: AccountDbId, data: AccountUpdate) => {
       current_balance: balance,
       updated_at: new Date(),
     })
-    .returning('*');
+    .returning("*");
 
   return transformDbRecordToAccount(updatedAccounts[0]);
 };
@@ -144,16 +146,18 @@ export const deleteAccount = async (id: AccountDbId) => {
   await findAccountById(id);
 
   const transactionsInCount = await db
-    .from<AccountDbRecord>('transactions')
-    .where('account_id', id)
-    .orWhere('transferred_to', id)
-    .count('id');
+    .from<AccountDbRecord>("transactions")
+    .where("account_id", id)
+    .orWhere("transferred_to", id)
+    .count("id");
 
   if (transactionsInCount[0].count > 0) {
-    throw new ApiError('There are transactions in this account. As long as there are, the account can\'t be deleted.');
+    throw new ApiError(
+      "There are transactions in this account. As long as there are, the account can't be deleted."
+    );
   }
 
-  await db.from<AccountDbRecord>('accounts').where({ id }).del();
+  await db.from<AccountDbRecord>("accounts").where({ id }).del();
 };
 
 /**
@@ -161,23 +165,33 @@ export const deleteAccount = async (id: AccountDbId) => {
  *
  * WARNING: This function does not check if the account exists.
  */
-export const addBalanceToAccount = async (id: AccountDbId, amount: string | number, trx: Knex.Transaction) => trx
-  .from<AccountDbRecord>('accounts')
-  .where({ id })
-  .update({
-    current_balance: db.raw('current_balance + ?', [amount]),
-    updated_at: new Date(),
-  });
+export const addBalanceToAccount = async (
+  id: AccountDbId,
+  amount: string | number,
+  trx: Knex.Transaction
+) =>
+  trx
+    .from<AccountDbRecord>("accounts")
+    .where({ id })
+    .update({
+      current_balance: db.raw("current_balance + ?", [amount]),
+      updated_at: new Date(),
+    });
 
 /**
  * Tries to subtract balance to an account.
  *
  * WARNING: This function does not check if the account exists.
  */
-export const subtractBalanceToAccount = async (id: AccountDbId, amount: string | number, trx: Knex.Transaction) => trx
-  .from<AccountDbRecord>('accounts')
-  .where({ id })
-  .update({
-    current_balance: db.raw('current_balance - ?', [amount]),
-    updated_at: new Date(),
-  });
+export const subtractBalanceToAccount = async (
+  id: AccountDbId,
+  amount: string | number,
+  trx: Knex.Transaction
+) =>
+  trx
+    .from<AccountDbRecord>("accounts")
+    .where({ id })
+    .update({
+      current_balance: db.raw("current_balance - ?", [amount]),
+      updated_at: new Date(),
+    });

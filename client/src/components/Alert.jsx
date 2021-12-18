@@ -15,11 +15,9 @@ const closeBtnColorMap = {
 
 function Alert(props) {
   const boxClasses =
-    "flex justify-between mb-6 rounded-md p-4 text-paper " +
-    boxColorMap[props.type];
+    "flex justify-between mb-6 rounded-md p-4 text-paper " + boxColorMap[props.type];
 
-  const closeBtnClasses =
-    "h-6 w-6 rounded-full transiton-all " + closeBtnColorMap[props.type];
+  const closeBtnClasses = "h-6 w-6 rounded-full transiton-all " + closeBtnColorMap[props.type];
 
   return (
     <div className={boxClasses}>

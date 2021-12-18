@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 function TransactionsList(props) {
   if (props.transactions.length === 0) {
-    return <div>There are no transactions.</div>
+    return <div>There are no transactions.</div>;
   }
 
   return (

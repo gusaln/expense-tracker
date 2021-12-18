@@ -1,4 +1,4 @@
-import BaseError from './baseError';
+import BaseError from "./baseError";
 
 export default class ApiError extends BaseError {
   private _status: number;

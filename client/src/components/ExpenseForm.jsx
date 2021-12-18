@@ -54,11 +54,7 @@ function ExpenseForm(props) {
   } = methods;
 
   const { accounts, isLoading: accountsLoading, getAccounts } = useAccounts();
-  const {
-    categories,
-    isLoading: categoriesLoading,
-    getCategories,
-  } = useCategories();
+  const { categories, isLoading: categoriesLoading, getCategories } = useCategories();
 
   const errors = useMemo(
     () => (props.errors ? { ...formErrors, ...props.errors } : formErrors),
@@ -85,24 +81,14 @@ function ExpenseForm(props) {
   return (
     <Card title={props.title}>
       <FormProvider {...methods}>
-        <form
-          className="space-y-4"
-          action=""
-          method="post"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className="space-y-4" action="" method="post" onSubmit={handleSubmit(onSubmit)}>
           <TextInput
             label="Description"
             name="description"
             required
             messages={mapError(errors, "description")}
           />
-          <TextInput
-            label="Amount"
-            name="amount"
-            required
-            messages={mapError(errors, "amount")}
-          />
+          <TextInput label="Amount" name="amount" required messages={mapError(errors, "amount")} />
           {accountsLoading ? (
             <div>Loading...</div>
           ) : (

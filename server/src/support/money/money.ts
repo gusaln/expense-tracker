@@ -1,7 +1,7 @@
-import { Big } from 'big.js';
-import Currency from './currency';
+import { Big } from "big.js";
+import Currency from "./currency";
 
-export type Amount = Big|number|string;
+export type Amount = Big | number | string;
 
 /**
  * Represents a monetary quantity.
@@ -15,8 +15,8 @@ export default class Money {
 
   public readonly currency: Currency;
 
-  constructor(amount: Amount, currency: Currency|string, inSubunit = false) {
-    if (typeof currency === 'string') {
+  constructor(amount: Amount, currency: Currency | string, inSubunit = false) {
+    if (typeof currency === "string") {
       currency = new Currency(currency);
     }
 
@@ -31,7 +31,7 @@ export default class Money {
    */
   add(other: Money) {
     if (!this.isSameCurrency(other.currency)) {
-      throw new Error('Addition between different currencies is not supported');
+      throw new Error("Addition between different currencies is not supported");
     }
 
     return new Money(this.amount.add(other.amount), this.currency, true);
@@ -42,7 +42,7 @@ export default class Money {
    */
   sub(other: Money) {
     if (!this.isSameCurrency(other.currency)) {
-      throw new Error('Subtraction between different currencies is not supported');
+      throw new Error("Subtraction between different currencies is not supported");
     }
 
     return new Money(this.amount.sub(other.amount), this.currency, true);
@@ -51,7 +51,7 @@ export default class Money {
   /**
    * Multiplies the amount of money by n.
    */
-  mul(n: Big|number) {
+  mul(n: Big | number) {
     return new Money(this.amount.mul(n), this.currency, true);
   }
 
@@ -61,7 +61,7 @@ export default class Money {
    * Note that this operation can result in an amount with a decimal part below the subunit for the
    * current currency.
    */
-  div(n: Big|number) {
+  div(n: Big | number) {
     return new Money(this.amount.div(n), this.currency, true);
   }
 
@@ -71,7 +71,7 @@ export default class Money {
    * Note that this operation can result in an amount with a decimal part below the subunit for the
    * current currency.
    */
-  percentage(percentage: Big|number) {
+  percentage(percentage: Big | number) {
     return new Money(this.amount.times(percentage).div(100), this.currency, true);
   }
 

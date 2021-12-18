@@ -54,7 +54,7 @@ export default function TransferEdit() {
       deleteTransfer(transfer.id)
         .then(() => {
           setSuccess("Transfer deleted!");
-          history.push("/")
+          history.push("/");
         })
         .catch((err) => setError(err))
         .finally(() => {

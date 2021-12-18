@@ -7,15 +7,15 @@ import TimeValue from "./TimeValue";
 
 function TransactionsListItem(props) {
   const categoryBgColor = props.type === "transfer" ? paperDark : props.category.color;
-  const categoryStyle = useComputeTextColor(categoryBgColor, `trans item ${props.type} ${props.amount}`);
+  const categoryStyle = useComputeTextColor(
+    categoryBgColor,
+    `trans item ${props.type} ${props.amount}`
+  );
 
   return (
     <div className="flex rounded-md p-2 hover:bg-paper-light transition duration-200 ease-in-out">
       <div>
-        <div
-          className="h-10 w-10 mr-2 mt-1 pt-2 rounded-lg text-center"
-          style={categoryStyle}
-        >
+        <div className="h-10 w-10 mr-2 mt-1 pt-2 rounded-lg text-center" style={categoryStyle}>
           <span className="material-icons">
             {props.type === "transfer" ? "arrow_forward" : props.category.icon}
           </span>

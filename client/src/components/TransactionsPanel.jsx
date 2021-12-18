@@ -1,11 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  DATE_FORMAT,
-  getEndOfTheMonth,
-  getStartOfTheMonth,
-  groupBy,
-  parseDate,
-} from "../utils";
+import { DATE_FORMAT, getEndOfTheMonth, getStartOfTheMonth, groupBy, parseDate } from "../utils";
 import useTransactions from "../hooks/useTransactions";
 import Card from "./Card";
 import TransactionGroupHeader from "./TransactionGroupHeader";
@@ -24,11 +18,7 @@ function TransactionsPanel() {
 
   const transactionGroups = useMemo(
     () =>
-      Object.entries(
-        groupBy(filteredTransactions, (t) =>
-          parseDate(t.date).format("YYYY-MM-DD")
-        )
-      ),
+      Object.entries(groupBy(filteredTransactions, (t) => parseDate(t.date).format("YYYY-MM-DD"))),
     [filteredTransactions]
   );
 

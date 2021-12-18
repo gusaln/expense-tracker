@@ -1,30 +1,36 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { addBalanceToAccount, subtractBalanceToAccount } from '../../accounts/queries';
-import { AccountDbId } from '../../accounts/types';
-import db from '../../db';
-import ApiError from '../../errors/apiError';
-import { parseDate } from '../../utils/date';
-import { TRANSACTION_TYPE_EXPENSE, TRANSACTION_TYPE_INCOME, TRANSACTION_TYPE_TRANSFER } from '../constants';
-import { TransactionDbRecord, TransactionNew, TransactionOfType, TransactionType } from '../types';
-import { isValidAccountId } from './isValidAccountId';
-import { isValidCategoryId } from './isValidCategoryId';
-import { transformDbRecordToTransaction } from './transformDbRecordToTransaction';
+import { addBalanceToAccount, subtractBalanceToAccount } from "../../accounts/queries";
+import { AccountDbId } from "../../accounts/types";
+import db from "../../db";
+import ApiError from "../../errors/apiError";
+import { parseDate } from "../../utils/date";
+import {
+  TRANSACTION_TYPE_EXPENSE,
+  TRANSACTION_TYPE_INCOME,
+  TRANSACTION_TYPE_TRANSFER,
+} from "../constants";
+import { TransactionDbRecord, TransactionNew, TransactionOfType, TransactionType } from "../types";
+import { isValidAccountId } from "./isValidAccountId";
+import { isValidCategoryId } from "./isValidCategoryId";
+import { transformDbRecordToTransaction } from "./transformDbRecordToTransaction";
 
 /**
  * Persists an transactions to the database
  */
-export async function createTransaction<T extends TransactionType>(data: TransactionNew<T>): Promise<TransactionOfType<T>> {
-  if (!await isValidAccountId(data.account_id)) {
-    throw new ApiError('Value of account_id is not a valid account ID.', 422);
+export async function createTransaction<T extends TransactionType>(
+  data: TransactionNew<T>
+): Promise<TransactionOfType<T>> {
+  if (!(await isValidAccountId(data.account_id))) {
+    throw new ApiError("Value of account_id is not a valid account ID.", 422);
   }
 
   if (data.type == TRANSACTION_TYPE_TRANSFER) {
-    if (!await isValidAccountId(data.transferred_to)) {
-      throw new ApiError('Value of transferred_to is not a valid account ID.', 422);
+    if (!(await isValidAccountId(data.transferred_to))) {
+      throw new ApiError("Value of transferred_to is not a valid account ID.", 422);
     }
   } else {
-    if (!await isValidCategoryId(data.category_id)) {
-      throw new ApiError('Value of category_id is not a valid category ID.', 422);
+    if (!(await isValidCategoryId(data.category_id))) {
+      throw new ApiError("Value of category_id is not a valid category ID.", 422);
     }
   }
 
@@ -48,7 +54,7 @@ export async function createTransaction<T extends TransactionType>(data: Transac
     }
 
     return await trx
-      .into<TransactionDbRecord<T>>('transactions')
+      .into<TransactionDbRecord<T>>("transactions")
       .insert({
         type: data.type,
         account_id: data.account_id,
@@ -58,7 +64,7 @@ export async function createTransaction<T extends TransactionType>(data: Transac
         amount: data.amount,
         date: parseDate(data.date).toDate(),
       } as TransactionDbRecord<T>)
-      .returning('*');
+      .returning("*");
   });
 
   return transformDbRecordToTransaction(newTransactions[0]) as TransactionOfType<T>;

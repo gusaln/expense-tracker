@@ -1,18 +1,10 @@
 import PropTypes from "prop-types";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import iconsCollection from "../icons";
 import { classname, debounce } from "../utils";
 
-const icons = iconsCollection
-  .filter((icon) => !icon.unsupported_families)
-  .map((icon) => icon.name);
+const icons = iconsCollection.filter((icon) => !icon.unsupported_families).map((icon) => icon.name);
 
 const iconTagIndex = iconsCollection.reduce((index, icon) => {
   if (icon.tags)

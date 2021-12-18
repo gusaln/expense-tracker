@@ -15,9 +15,7 @@ function AccountsListItem(props) {
       <div className="flex justify-between pb-2 text-lg text-left">
         {props.name}
 
-        <span className="text-xl">
-          {formatNumber(props.current_balance.amount)}
-        </span>
+        <span className="text-xl">{formatNumber(props.current_balance.amount)}</span>
       </div>
 
       <div className="flex justify-end">

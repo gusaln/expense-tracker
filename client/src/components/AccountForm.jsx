@@ -21,7 +21,7 @@ function AccountForm(props) {
       name: "",
       icon: "",
       color: "",
-      currency: ""
+      currency: "",
     };
 
     if (props.original) {
@@ -61,30 +61,10 @@ function AccountForm(props) {
   return (
     <Card title={props.title}>
       <FormProvider {...methods}>
-        <form
-          className="space-y-4"
-          action=""
-          method="post"
-          onSubmit={handleSubmit(submit)}
-        >
-          <TextInput
-            label="Name"
-            name="name"
-            required
-            messages={mapError(errors, "name")}
-          />
-          <IconPicker
-            label="Icon"
-            name="icon"
-            required
-            messages={mapError(errors, "icon")}
-          />
-          <ColorPicker
-            label="Color"
-            name="color"
-            required
-            messages={mapError(errors, "color")}
-          />
+        <form className="space-y-4" action="" method="post" onSubmit={handleSubmit(submit)}>
+          <TextInput label="Name" name="name" required messages={mapError(errors, "name")} />
+          <IconPicker label="Icon" name="icon" required messages={mapError(errors, "icon")} />
+          <ColorPicker label="Color" name="color" required messages={mapError(errors, "color")} />
           <TextInput
             label="Currency (can't be modified)"
             name="currency"

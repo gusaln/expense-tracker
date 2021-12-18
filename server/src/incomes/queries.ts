@@ -1,9 +1,14 @@
-import db, { isInvalidId } from '../db';
-import ResourceNotFoundError from '../errors/resourceNotFoundError';
-import { TRANSACTION_TYPE_INCOME } from '../transactions/constants';
-import { createTransaction, deleteTransaction, listTransactions, updateTransaction } from '../transactions/queries';
-import { IncomeTransaction, TransactionDbRecord, TransactionNew } from '../transactions/types';
-import { Income, IncomeDbId, IncomeNew, IncomeUpdate } from './types';
+import db, { isInvalidId } from "../db";
+import ResourceNotFoundError from "../errors/resourceNotFoundError";
+import { TRANSACTION_TYPE_INCOME } from "../transactions/constants";
+import {
+  createTransaction,
+  deleteTransaction,
+  listTransactions,
+  updateTransaction,
+} from "../transactions/queries";
+import { IncomeTransaction, TransactionDbRecord, TransactionNew } from "../transactions/types";
+import { Income, IncomeDbId, IncomeNew, IncomeUpdate } from "./types";
 
 type IncomeSelector = typeof TRANSACTION_TYPE_INCOME;
 
@@ -33,7 +38,10 @@ const transformIncomeTransactionToIncome = (dbIncome: IncomeTransaction): Income
  * Lists all the incomes
  */
 export const listIncomes = async (): Promise<Income[]> => {
-  const incomes = (await listTransactions({ type: TRANSACTION_TYPE_INCOME }, ['date', 'desc']) as IncomeTransaction[]);
+  const incomes = (await listTransactions({ type: TRANSACTION_TYPE_INCOME }, [
+    "date",
+    "desc",
+  ])) as IncomeTransaction[];
 
   return incomes.map(transformIncomeTransactionToIncome);
 };
@@ -48,7 +56,8 @@ export const findIncomeById = async (id: IncomeDbId): Promise<Income> => {
     throw new ResourceNotFoundError(`Income ID ${id} not found.`);
   }
 
-  const income = await db.from<TransactionDbRecord<'income'>>('transactions')
+  const income = await db
+    .from<TransactionDbRecord<"income">>("transactions")
     .where({ id, type: TRANSACTION_TYPE_INCOME })
     .first();
 
@@ -70,7 +79,7 @@ export const createIncome = async (data: IncomeNew): Promise<Income> => {
     description: data.description,
     amount: data.amount,
     date: data.date,
-  } as TransactionNew<'income'>);
+  } as TransactionNew<"income">);
 
   return transformIncomeTransactionToIncome(newIncome);
 };
@@ -82,16 +91,13 @@ export const createIncome = async (data: IncomeNew): Promise<Income> => {
  */
 export const updateIncome = async (id: IncomeDbId, data: IncomeUpdate): Promise<Income> => {
   try {
-    const updatedIncome = await updateTransaction(
-      id,
-      {
-        account_id: data.account_id,
-        category_id: data.category_id,
-        description: data.description,
-        amount: data.amount,
-        date: data.date,
-      } as TransactionNew<'income'>
-      );
+    const updatedIncome = await updateTransaction(id, {
+      account_id: data.account_id,
+      category_id: data.category_id,
+      description: data.description,
+      amount: data.amount,
+      date: data.date,
+    } as TransactionNew<"income">);
     return transformIncomeTransactionToIncome(updatedIncome);
   } catch (error) {
     if (error instanceof ResourceNotFoundError) {

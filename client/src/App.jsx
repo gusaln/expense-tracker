@@ -21,7 +21,11 @@ const links = [
 ];
 
 const NavLink = forwardRef((props, ref) => (
-  <a ref={ref} {...props} className="h-full flex p-2 hover:bg-gray-700 transition duration-200 ease-in-out">
+  <a
+    ref={ref}
+    {...props}
+    className="h-full flex p-2 hover:bg-gray-700 transition duration-200 ease-in-out"
+  >
     {props.children}
   </a>
 ));

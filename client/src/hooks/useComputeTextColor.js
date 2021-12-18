@@ -3,8 +3,8 @@ import { colorMap } from "../colors";
 import { computeBrightnessFromRGB } from "../utils";
 
 const PATTERN = /[#]([0-9a-f]{3}|[0-9a-f]{6})/i.compile();
-const DARK_TEXT_COLOR = colorMap.gray[800]
-const LIGHT_TEXT_COLOR = colorMap.gray[50]
+const DARK_TEXT_COLOR = colorMap.gray[800];
+const LIGHT_TEXT_COLOR = colorMap.gray[50];
 
 /**
  * Chooses a contrasting text color for a given background color.
@@ -20,9 +20,7 @@ export default function useComputeTextColor(color, tag = null) {
 
   useEffect(() => {
     const _color =
-      typeof color === "string" && PATTERN.test(String(color))
-        ? color
-        : LIGHT_TEXT_COLOR;
+      typeof color === "string" && PATTERN.test(String(color)) ? color : LIGHT_TEXT_COLOR;
     const colorLuminance = computeBrightnessFromRGB(_color);
     const darkLuminance = computeBrightnessFromRGB(DARK_TEXT_COLOR);
     // const lightLuminance = computeBrightnessFromRGB(LIGHT_TEXT_COLOR);
@@ -34,7 +32,7 @@ export default function useComputeTextColor(color, tag = null) {
     // })
 
     // https://www.w3.org/TR/AERT/#color-contrast suggests a maximum brightness difference of 125
-    const textColor = (colorLuminance-darkLuminance) >= 125 ? DARK_TEXT_COLOR : LIGHT_TEXT_COLOR;
+    const textColor = colorLuminance - darkLuminance >= 125 ? DARK_TEXT_COLOR : LIGHT_TEXT_COLOR;
 
     setStyle({ backgroundColor: _color, color: textColor });
   }, [color]);

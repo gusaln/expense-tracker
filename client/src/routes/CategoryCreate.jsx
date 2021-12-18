@@ -61,7 +61,11 @@ export default function CategoryCreate() {
         </Link>
       </div>
 
-      <CategoryForm title="Add a category" onSubmit={handleSubmit} errors={error ? error.errors : null} />
+      <CategoryForm
+        title="Add a category"
+        onSubmit={handleSubmit}
+        errors={error ? error.errors : null}
+      />
     </div>
   );
 }

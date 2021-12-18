@@ -11,9 +11,7 @@ function formatValueByCurrency(valueByCurrency) {
 
   if (entries.length === 0) return [`${formatNumber(0)} USD`];
 
-  return entries.map(
-    ([currency, value]) => `${formatNumber(value)} ${currency}`
-  );
+  return entries.map(([currency, value]) => `${formatNumber(value)} ${currency}`);
 }
 
 export default function Home() {

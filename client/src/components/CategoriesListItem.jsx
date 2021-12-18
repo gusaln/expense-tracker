@@ -11,10 +11,10 @@ function CategoriesListItem(props) {
       style={buttonStyle}
       onClick={props.onClick}
     >
-        <div className="pb-2 text-left">{props.name}</div>
-        <div className="flex justify-end">
-          <span className="material-icons">{props.icon}</span>
-        </div>
+      <div className="pb-2 text-left">{props.name}</div>
+      <div className="flex justify-end">
+        <span className="material-icons">{props.icon}</span>
+      </div>
     </button>
   );
 }

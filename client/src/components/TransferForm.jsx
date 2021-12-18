@@ -78,24 +78,14 @@ function TransferForm(props) {
   return (
     <Card title={props.title}>
       <FormProvider {...methods}>
-        <form
-          className="space-y-4"
-          action=""
-          method="post"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className="space-y-4" action="" method="post" onSubmit={handleSubmit(onSubmit)}>
           <TextInput
             label="Description"
             name="description"
             required
             messages={mapError(errors, "description")}
           />
-          <TextInput
-            label="Amount"
-            name="amount"
-            required
-            messages={mapError(errors, "amount")}
-          />
+          <TextInput label="Amount" name="amount" required messages={mapError(errors, "amount")} />
           {accountsLoading ? (
             <div>Loading...</div>
           ) : (

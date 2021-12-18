@@ -1,11 +1,5 @@
 import PropTypes from "prop-types";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { colorList } from "../colors";
 import useComputeTextColor from "../hooks/useComputeTextColor";
@@ -16,7 +10,7 @@ function ColorPickerPanel(props) {
 
   const colorListContent = useMemo(
     () =>
-    colorList.map((color) => (
+      colorList.map((color) => (
         <li
           id={`color-${color.replace("#", "")}`}
           role="menuitem"
@@ -77,9 +71,7 @@ function ColorPicker(props) {
     // Uses a delay to give time to the dom to update and show the panel.
     setTimeout(() => {
       if (internalValue) {
-        document
-          .querySelector(`#color-${internalValue.replace("#", "")}`)
-          .scrollIntoView();
+        document.querySelector(`#color-${internalValue.replace("#", "")}`).scrollIntoView();
       }
     }, 0);
   }
@@ -124,10 +116,7 @@ function ColorPicker(props) {
         >
           {internalValue ? (
             <>
-              <span
-                className="inline-block h-full -my-2 rounded-lg p-1"
-                style={textStyle}
-              >
+              <span className="inline-block h-full -my-2 rounded-lg p-1" style={textStyle}>
                 {internalValue}
               </span>
               <button

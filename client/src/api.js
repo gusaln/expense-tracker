@@ -11,9 +11,7 @@ async function httpRequest(url, options = undefined) {
 
   if (!response.ok) {
     const err = new Error(
-      response.status >= 500
-        ? "There was an error processing the request."
-        : data.message
+      response.status >= 500 ? "There was an error processing the request." : data.message
     );
 
     err.status = response.status;
@@ -21,12 +19,12 @@ async function httpRequest(url, options = undefined) {
     if (response.status === 422) {
       err.errors = {};
       data.errors
-        .filter((errorObject) => errorObject.source.pointer.startsWith('/body/'))
+        .filter((errorObject) => errorObject.source.pointer.startsWith("/body/"))
         .forEach((errorObject) => {
-          err.errors[errorObject.source.pointer.replace('/body/', '')] = errorObject.detail;
+          err.errors[errorObject.source.pointer.replace("/body/", "")] = errorObject.detail;
         });
 
-      console.log("Validation Errors", data.errors)
+      console.log("Validation Errors", data.errors);
     }
 
     throw err;
@@ -36,34 +34,24 @@ async function httpRequest(url, options = undefined) {
 }
 
 export async function fetchAccounts() {
-  const data = await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/accounts`
-  );
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/accounts`);
 
   return data.data;
 }
 
 export async function fetchCategories(search = null) {
-  const q = new URLSearchParams(
-    Object.entries(search || {}).filter(([, v]) => v !== null)
-  );
-  const data = await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/categories?` + q
-  );
+  const q = new URLSearchParams(Object.entries(search || {}).filter(([, v]) => v !== null));
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/categories?` + q);
 
   return data.data;
 }
 
 export async function fetchTransactions(search = null) {
-  const q = new URLSearchParams(
-    Object.entries(search || {}).filter(([, v]) => v)
-  );
+  const q = new URLSearchParams(Object.entries(search || {}).filter(([, v]) => v));
   q.delete("sort");
   q.append("sort", "date");
   q.append("sort", "desc");
-  const data = await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/transactions?` + q
-  );
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/transactions?` + q);
 
   return data.data;
 }
@@ -98,41 +86,31 @@ export async function fetchMonthlyReport(account = null) {
 }
 
 export async function getAccount(id) {
-  const data = await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/accounts/${id}`
-  );
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/accounts/${id}`);
 
   return data.data;
 }
 
 export async function getCategory(id) {
-  const data = await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/categories/${id}`
-  );
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/categories/${id}`);
 
   return data.data;
 }
 
 export async function getIncome(id) {
-  const data = await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/incomes/${id}`
-  );
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/incomes/${id}`);
 
   return data.data;
 }
 
 export async function getExpense(id) {
-  const data = await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/expenses/${id}`
-  );
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/expenses/${id}`);
 
   return data.data;
 }
 
 export async function getTransfer(id) {
-  const data = await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/transfers/${id}`
-  );
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/transfers/${id}`);
 
   return data.data;
 }
@@ -188,66 +166,51 @@ export async function addTransfer(transfer) {
 }
 
 export async function updateAccount(id, account) {
-  const data = await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/accounts/${id}`,
-    {
-      method: "put",
-      body: JSON.stringify(account),
-      headers: { "content-type": "application/json" },
-    }
-  );
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/accounts/${id}`, {
+    method: "put",
+    body: JSON.stringify(account),
+    headers: { "content-type": "application/json" },
+  });
 
   return data.data;
 }
 
 export async function updateCategory(id, category) {
-  const data = await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/categories/${id}`,
-    {
-      method: "put",
-      body: JSON.stringify(category),
-      headers: { "content-type": "application/json" },
-    }
-  );
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/categories/${id}`, {
+    method: "put",
+    body: JSON.stringify(category),
+    headers: { "content-type": "application/json" },
+  });
 
   return data.data;
 }
 
 export async function updateIncome(id, income) {
-  const data = await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/incomes/${id}`,
-    {
-      method: "put",
-      body: JSON.stringify(income),
-      headers: { "content-type": "application/json" },
-    }
-  );
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/incomes/${id}`, {
+    method: "put",
+    body: JSON.stringify(income),
+    headers: { "content-type": "application/json" },
+  });
 
   return data.data;
 }
 
 export async function updateExpense(id, expense) {
-  const data = await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/expenses/${id}`,
-    {
-      method: "put",
-      body: JSON.stringify(expense),
-      headers: { "content-type": "application/json" },
-    }
-  );
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/expenses/${id}`, {
+    method: "put",
+    body: JSON.stringify(expense),
+    headers: { "content-type": "application/json" },
+  });
 
   return data.data;
 }
 
 export async function updateTransfer(id, transfer) {
-  const data = await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/transfers/${id}`,
-    {
-      method: "put",
-      body: JSON.stringify(transfer),
-      headers: { "content-type": "application/json" },
-    }
-  );
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/transfers/${id}`, {
+    method: "put",
+    body: JSON.stringify(transfer),
+    headers: { "content-type": "application/json" },
+  });
 
   return data.data;
 }
@@ -262,13 +225,10 @@ export async function deleteAccount(id) {
 }
 
 export async function deleteCategory(id) {
-  await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/categories/${id}`,
-    {
-      method: "delete",
-      headers: { "content-type": "application/json" },
-    }
-  );
+  await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/categories/${id}`, {
+    method: "delete",
+    headers: { "content-type": "application/json" },
+  });
 
   return;
 }
@@ -292,13 +252,10 @@ export async function deleteExpense(id) {
 }
 
 export async function deleteTransfer(id) {
-  await httpRequest(
-    `${process.env.REACT_APP_BASE_URL}/api/v1/transfers/${id}`,
-    {
-      method: "delete",
-      headers: { "content-type": "application/json" },
-    }
-  );
+  await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/transfers/${id}`, {
+    method: "delete",
+    headers: { "content-type": "application/json" },
+  });
 
   return;
 }

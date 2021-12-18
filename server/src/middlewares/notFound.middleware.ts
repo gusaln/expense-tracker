@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from 'express';
-import ApiError from '../errors/apiError';
+import { NextFunction, Request, Response } from "express";
+import ApiError from "../errors/apiError";
 
 /**
  * Shows a not found response

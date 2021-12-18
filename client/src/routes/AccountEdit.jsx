@@ -44,7 +44,6 @@ export default function AccountEdit() {
       });
   }
 
-
   function confirmDeletion() {
     // eslint-disable-next-line no-restricted-globals
     if (confirm("Are you sure you want to delete this transaction?")) {
@@ -55,7 +54,7 @@ export default function AccountEdit() {
       deleteAccount(account.id)
         .then(() => {
           setSuccess("Account deleted!");
-          history.push("/")
+          history.push("/");
         })
         .catch((err) => setError(err))
         .finally(() => {

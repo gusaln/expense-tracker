@@ -25,7 +25,6 @@ function Switch(props) {
         <div className="h-full flex justify-center items-center flex-grow">
           <div
             className="relative w-12 h-6 rounded-full border-2 border-gray-300 bg-paper"
-
             onClick={() => setValue(name, !internalValue)}
           >
             <div
@@ -43,13 +42,7 @@ function Switch(props) {
         <div>{trueLabel}</div>
       </div>
 
-      <input
-        hidden
-        id={name}
-        name={name}
-        {...rest}
-        {...register(name, { required })}
-      />
+      <input hidden id={name} name={name} {...rest} {...register(name, { required })} />
       {messages}
     </div>
   );

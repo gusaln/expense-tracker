@@ -1,9 +1,9 @@
-import { ErrorObject } from 'ajv';
-import BaseError from '../errors/baseError';
+import { ErrorObject } from "ajv";
+import BaseError from "../errors/baseError";
 
 export default class ValidationError extends BaseError {
   constructor(public errors: ErrorObject[]) {
-    super('Validation error');
+    super("Validation error");
   }
 
   get status(): number {
@@ -11,6 +11,6 @@ export default class ValidationError extends BaseError {
   }
 
   get title(): string {
-    throw new Error('Request was provided invalid data.');
+    throw new Error("Request was provided invalid data.");
   }
 }
