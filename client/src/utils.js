@@ -157,6 +157,18 @@ export function computeContrastRatio(lighterColor, darkerColor) {
 }
 
 /**
+ * Checks if a color is light
+ *
+ * @param {string} color
+ * @param {number} offset allows to skew the selection by moving the target brightness up or down (between -125 and 125)
+ */
+ export function isDarkColor(color, offset = 0) {
+  // https://www.w3.org/TR/AERT/#color-contrast suggests a maximum brightness difference of 125.
+  // Since the brightness of black is 0, the brightness of any color is its difference with black.
+  return computeBrightnessFromRGB(color) < Math.max(0, 125 + offset);
+}
+
+/**
  * Groups elements from a collection of elements
  *
  * @param {any[]} elements The array of elements.

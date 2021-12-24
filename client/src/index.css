@@ -12,3 +12,17 @@
 body {
   min-height: 100vh;
 }
+
+.form-input {
+  @apply h-11 border rounded p-2 focus:border-2 focus:border-gray-400 hover:border-gray-400;
+}
+
+.form-input.form-input-block {
+  @apply w-full;
+}
+
+.form-input input:active,
+.form-input input:hover,
+.form-input input:enabled {
+  border: 0;
+}

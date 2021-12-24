@@ -3,6 +3,9 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useFormContext } from "react-hook-form";
 import iconsCollection from "../icons";
 import { classname, debounce } from "../utils";
+import DangerButton from "./DangerButton";
+import Icon from "./Icon";
+import Modal from "./Modal";
 
 const icons = iconsCollection.filter((icon) => !icon.unsupported_families).map((icon) => icon.name);
 
@@ -41,7 +44,7 @@ async function searchIcon(query) {
 }
 
 function IconPickerPanel(props) {
-  const { value, onMouseLeavePanel, onMouseEnterPanel, onValueSelected } = props;
+  const { value, onClosePanel, onValueSelected } = props;
   const [iconList, setIconList] = useState(icons);
 
   const handleSearch = debounce((query) => {
@@ -49,50 +52,56 @@ function IconPickerPanel(props) {
     else searchIcon(query).then((list) => setIconList(list));
   }, 500);
 
+  const selectedRef = useRef(null);
+
   const iconListContent = useMemo(
     () =>
       iconList.map((icon) => (
         <li
-          id={`icon-${icon}`}
+          ref={icon === value ? selectedRef : undefined}
           role="menuitem"
           key={icon}
           className={classname(
             {
-              "my-6 shadow-lg": icon === value,
-              "mb-2 hover:shadow-md": icon !== value,
+              "shadow-xl outline outline-6": icon === value,
+              "shadow-sm hover:outline hover:outline-6": icon !== value,
             },
-            "inline-flex justify-center items-center mr-2 border border-dashed rounded-lg p-4 cursor-pointer transition-all duration-200 ease-out"
+            "inline-flex justify-center items-center mr-2 outline-blue-500 border border-dashed rounded-lg p-4 cursor-pointer transition-all duration-200"
           )}
           onClick={() => onValueSelected(icon)}
         >
-          <span className="material-icons">{icon}</span>
+          <Icon>{icon}</Icon>
         </li>
       )),
     [iconList, value, onValueSelected]
   );
 
+  useEffect(() => {
+    // setTimeout(() => {
+      if (selectedRef.current) selectedRef.current.scrollIntoView();
+    // }, 0);
+  }, []);
+
   return (
-    <div
-      className="z-50 w-full absolute bottom-0 right-0 md:w-8/12"
-      onMouseLeave={onMouseLeavePanel}
-      onMouseEnter={onMouseEnterPanel}
-    >
-      <div
-        className="w-full m-2 shadow-md p-6 bg-white"
-        style={{ minHeight: "25vh", height: "50vh", maxHeight: "50vh" }}
-      >
-        <div>
+    <div className="w-[90%] h-[90%] max-h-screen shadow-md p-4 bg-white overflow-y-clip md:w-4/6 md:h-5/6">
+      <div className="flex justify-end items-center pb-4 space-x-4">
+        <div className="form-input form-input-block flex flex-grow space-x-2">
+          <Icon>search</Icon>
+
           <input
-            className="w-full h-11 mb-2 border rounded p-2 focus:border-2 focus:border-gray-400 hover:border-gray-400"
-            placeholder="Search an icon"
+            className="flex-grow"
+            placeholder="Type to filter icons"
             onInput={(ev) => handleSearch(ev.target.value)}
           />
         </div>
 
-        <ul
-          role="menu"
-          className="w-full min-h-5/6 h-5/6 max-h-full overflow-x-hidden overflow-y-scroll"
-        >
+        <div className="h-11">
+          <DangerButton onClick={onClosePanel}>Close</DangerButton>
+        </div>
+      </div>
+
+      <div className="w-full max-h-[90%] overflow-y-scroll">
+        <ul role="menu" className="grid grid-cols-10 gap-1 w-full p-2 overflow-x-hidden sm:gap-2">
           {iconListContent}
         </ul>
       </div>
@@ -106,35 +115,20 @@ function IconPicker(props) {
   const { name, label, required, messages = null, ...rest } = props;
 
   const [internalValue, setInternalValue] = useState(null);
-
   const [isOpen, setOpen] = useState(false);
-  const timeoutHandler = useRef(null);
 
   function closePanel() {
-    timeoutHandler.current = setTimeout(() => {
-      setOpen(false);
-      timeoutHandler.current = null;
-    }, 300);
-  }
-
-  function cancelClosePanel() {
-    if (timeoutHandler.current) clearTimeout(timeoutHandler.current);
+    setOpen(false);
   }
 
   function handleOpenPanel() {
     setOpen(true);
-    // Uses a delay to give time to the dom to update and show the panel.
-    setTimeout(() => {
-      if (internalValue) {
-        const el = document.querySelector(`#icon-${internalValue}`);
-        if (el) el.scrollIntoView();
-      }
-    }, 0);
   }
 
   const handleValueSelected = useCallback(
     (icon) => {
       formContext.setValue(props.name, icon);
+      closePanel();
     },
     [formContext, props.name]
   );
@@ -170,14 +164,13 @@ function IconPicker(props) {
       <div className="w-full md:w-8/12">
         {/* This is the input that shows the current value, but it is not connected to the form. */}
         <div
-          className="w-full h-11 flex justify-between items-center border rounded p-2 focus:border-2 focus:border-gray-400 hover:border-gray-400"
+          className="form-input form-input-block flex justify-between items-center"
           onClick={handleOpenPanel}
         >
           {internalValue ? (
             <>
               <div className="inline-flex h-full -my-2 rounded-lg p-1">
-                <span className="mr-2">{internalValue}</span>{" "}
-                <span className="material-icons">{internalValue}</span>
+                <span className="mr-2">{internalValue}</span> <Icon>{internalValue}</Icon>
               </div>
 
               <button
@@ -203,16 +196,13 @@ function IconPicker(props) {
         {messages}
       </div>
 
-      {isOpen ? (
+      <Modal isOpen={isOpen} onClose={closePanel}>
         <IconPickerPanel
           value={internalValue}
           onValueSelected={handleValueSelected}
-          onMouseLeavePanel={closePanel}
-          onMouseEnterPanel={cancelClosePanel}
+          onClosePanel={closePanel}
         />
-      ) : (
-        ""
-      )}
+      </Modal>
     </div>
   );
 }

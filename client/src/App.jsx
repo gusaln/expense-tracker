@@ -32,7 +32,7 @@ const NavLink = forwardRef((props, ref) => (
 
 function App() {
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen pb-8 bg-paper">
       <header className="flex justify-between items-center px-4 py-2 bg-charcoal text-paper md:px-8 md:py-4">
         <Link to="/">
           <h1 className="text-xl font-medium md:text-2xl">

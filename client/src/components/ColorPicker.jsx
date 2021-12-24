@@ -1,42 +1,67 @@
 import PropTypes from "prop-types";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { colorList } from "../colors";
+import { colorMap } from "../colors";
 import useComputeTextColor from "../hooks/useComputeTextColor";
-import { classname } from "../utils";
+import { classname, isDarkColor } from "../utils";
+import DangerButton from "./DangerButton";
+import Modal from "./Modal";
 
 function ColorPickerPanel(props) {
-  const { value, onClosePanel, onCancelClosePanel, onValueSelected } = props;
+  const { value, onClosePanel, onValueSelected } = props;
+
+  const selectedRef = useRef(null);
 
   const colorListContent = useMemo(
     () =>
-      colorList.map((color) => (
-        <li
-          id={`color-${color.replace("#", "")}`}
-          role="menuitem"
-          key={color}
-          className={classname(
-            {
-              "my-6 shadow-lg": color === value,
-              "mb-2 hover:shadow-md": color !== value,
-            },
-            "w-full h-8 rounded-lg cursor-pointer transition-all duration-200 ease-out"
-          )}
-          style={{ backgroundColor: color }}
-          onClick={() => onValueSelected(color)}
-        />
-      )),
+      Object.entries(colorMap)
+        .filter(([, value]) => typeof value != "string")
+        .flatMap(([name, colors]) =>
+          Object.entries(colors).map(([tone, color]) => {
+            const isSelected = color === value;
+            const isDark = isDarkColor(color, -80);
+
+            return (
+              <li
+                ref={isSelected ? selectedRef : undefined}
+                role="menuitem"
+                key={`${name}-${tone}-${color}`}
+                className={classname(
+                  {
+                    "shadow-xl outline outline-6": isSelected,
+                    "shadow-sm hover:outline hover:outline-6": !isSelected,
+                    "outline-blue-400": isDark,
+                    "outline-blue-500": !isDark,
+                  },
+                  "w-6 h-6 rounded-full cursor-pointer transition-all duration-100 sm:w-auto sm:h-8 sm:rounded-lg lg:h-9"
+                )}
+                style={{ backgroundColor: color }}
+                onClick={() => onValueSelected(color)}
+              />
+            );
+          })
+        ),
     [value, onValueSelected]
   );
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (selectedRef.current) selectedRef.current.scrollIntoView();
+    }, 0);
+  }, []);
+
   return (
-    <div
-      className="z-50 w-full absolute top-1/2 right-0 md:w-8/12"
-      onMouseLeave={onClosePanel}
-      onMouseEnter={onCancelClosePanel}
-    >
-      <div className="w-full h-52 m-2 shadow-md p-6 bg-white overflow-x-hidden overflow-y-scroll">
-        <ul role="menu" className="w-full">
+    <div className="w-[90%] h-[90%] max-h-screen shadow-md p-4 bg-white overflow-y-auto md:w-4/6 md:h-5/6">
+      <div className="flex justify-end items-center pb-4 space-x-2">
+        <div className="h-full flex-grow text-gray-500">Click a color to select it</div>
+
+        <div className="h-full">
+          <DangerButton onClick={onClosePanel}>Close</DangerButton>
+        </div>
+      </div>
+
+      <div className="w-full max-h-[90%] overflow-y-scroll">
+        <ul role="menu" className="grid grid-cols-10 gap-1 w-full p-2 overflow-x-hidden sm:gap-2">
           {colorListContent}
         </ul>
       </div>
@@ -53,32 +78,19 @@ function ColorPicker(props) {
   const textStyle = useComputeTextColor(internalValue);
 
   const [isOpen, setOpen] = useState(false);
-  const timeoutHandler = useRef(null);
 
   function closePanel() {
-    timeoutHandler.current = setTimeout(() => {
-      setOpen(false);
-      timeoutHandler.current = null;
-    }, 300);
-  }
-
-  function cancelClosePanel() {
-    if (timeoutHandler.current) clearTimeout(timeoutHandler.current);
+    setOpen(false);
   }
 
   function handleOpenPanel() {
     setOpen(true);
-    // Uses a delay to give time to the dom to update and show the panel.
-    setTimeout(() => {
-      if (internalValue) {
-        document.querySelector(`#color-${internalValue.replace("#", "")}`).scrollIntoView();
-      }
-    }, 0);
   }
 
   const handleValueSelected = useCallback(
     (color) => {
       formContext.setValue(props.name, color);
+      closePanel();
     },
     [formContext, props.name]
   );
@@ -111,7 +123,7 @@ function ColorPicker(props) {
       <div className="w-full md:w-8/12">
         {/* This is the input that shows the current value, but it is not connected to the form. */}
         <div
-          className="w-full h-11 flex justify-between items-center border rounded p-2 focus:border-2 focus:border-gray-400 hover:border-gray-400"
+          className="form-input form-input-block flex justify-between items-center"
           onClick={handleOpenPanel}
         >
           {internalValue ? (
@@ -142,16 +154,13 @@ function ColorPicker(props) {
         {messages}
       </div>
 
-      {isOpen ? (
+      <Modal isOpen={isOpen} onClose={closePanel}>
         <ColorPickerPanel
           value={internalValue}
           onValueSelected={handleValueSelected}
           onClosePanel={closePanel}
-          onCancelClosePanel={cancelClosePanel}
         />
-      ) : (
-        ""
-      )}
+      </Modal>
     </div>
   );
 }

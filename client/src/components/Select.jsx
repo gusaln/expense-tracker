@@ -17,7 +17,7 @@ function Select(props) {
       )}
 
       <select
-        className="w-full md:w-8/12 border rounded p-2 focus:border-gray-400 hover:border-gray-400"
+        className="form-input w-full md:w-8/12"
         id={name}
         name={name}
         {...rest}

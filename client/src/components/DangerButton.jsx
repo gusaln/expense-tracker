@@ -18,6 +18,7 @@ DangerButton.propTypes = {
   small: PropTypes.bool,
   text: PropTypes.bool,
   disabled: PropTypes.bool,
+  onClick: PropTypes.func,
 };
 
 export default DangerButton;

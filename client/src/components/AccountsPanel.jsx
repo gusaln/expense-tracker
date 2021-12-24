@@ -16,7 +16,7 @@ export default function AccountsPanel() {
         title="Accounts"
         titleAddon={
           <input
-            className="border rounded p-2 focus:border-gray-400 hover:border-gray-400"
+            className="form-input"
             name="search"
             placeholder="Filter accounts"
           />
