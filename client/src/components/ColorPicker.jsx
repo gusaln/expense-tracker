@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import React, { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { colorMap } from "../colors";
 import useComputeTextColor from "../hooks/useComputeTextColor";
 import { classname, isDarkColor } from "../utils";
+import Card from "./Card";
 import DangerButton from "./DangerButton";
 import Modal from "./Modal";
 
@@ -51,28 +51,26 @@ function ColorPickerPanel(props) {
   }, []);
 
   return (
-    <div className="w-[90%] h-[90%] max-h-screen shadow-md p-4 bg-white overflow-y-auto md:w-4/6 md:h-5/6">
-      <div className="flex justify-end items-center pb-4 space-x-2">
-        <div className="h-full flex-grow text-gray-500">Click a color to select it</div>
-
-        <div className="h-full">
-          <DangerButton onClick={onClosePanel}>Close</DangerButton>
+    <div className="w-[90%] h-[90%] max-h-screen overflow-y-scroll md:w-4/6 md:h-5/6">
+      <Card>
+        <div className="flex justify-end items-center pb-4 space-x-2">
+          <div className="h-full flex-grow text-gray-400">Click a color to select it</div>
+          <div className="h-full">
+            <DangerButton onClick={onClosePanel}>Close</DangerButton>
+          </div>
         </div>
-      </div>
-
-      <div className="w-full max-h-[90%] overflow-y-scroll">
-        <ul role="menu" className="grid grid-cols-10 gap-1 w-full p-2 overflow-x-hidden sm:gap-2">
-          {colorListContent}
-        </ul>
-      </div>
+        <div className="w-full">
+          <ul role="menu" className="grid grid-cols-10 gap-1 w-full p-2 overflow-x-hidden sm:gap-2">
+            {colorListContent}
+          </ul>
+        </div>
+      </Card>
     </div>
   );
 }
 
-function ColorPicker(props) {
-  const formContext = useFormContext();
-
-  const { name, label, required, messages = null, ...rest } = props;
+const ColorPicker = forwardRef((props, ref) => {
+  const { name, value = "", onChange = null, ...rest } = props;
 
   const [internalValue, setInternalValue] = useState(null);
   const textStyle = useComputeTextColor(internalValue);
@@ -87,73 +85,34 @@ function ColorPicker(props) {
     setOpen(true);
   }
 
+  const setValue = useCallback(
+    (value) => {
+      setInternalValue(value);
+      onChange?.(value);
+    },
+    [onChange]
+  );
+
   const handleValueSelected = useCallback(
     (color) => {
-      formContext.setValue(props.name, color);
+      setValue(color);
       closePanel();
     },
-    [formContext, props.name]
+    [setValue]
   );
 
   function handleValueClear(ev) {
     ev.stopPropagation();
-    formContext.setValue(props.name, "");
+    setValue("");
   }
 
   // Updates the internal value if the form value changes.
-  formContext.watch((state) => {
-    setInternalValue(state[name]);
-  });
-
   useEffect(() => {
-    setInternalValue(formContext.getValues()[name]);
-  }, [formContext, name]);
+    setInternalValue(value);
+  }, [value]);
 
   return (
-    <div className="relative flex justify-between items-start">
-      {label ? (
-        <label htmlFor={name} className="w-full md:w-4/12 py-2">
-          {label}
-        </label>
-      ) : (
-        ""
-      )}
-
-      {/* Input container */}
-      <div className="w-full md:w-8/12">
-        {/* This is the input that shows the current value, but it is not connected to the form. */}
-        <div
-          className="form-input form-input-block flex justify-between items-center"
-          onClick={handleOpenPanel}
-        >
-          {internalValue ? (
-            <>
-              <span className="inline-block h-full -my-2 rounded-lg p-1" style={textStyle}>
-                {internalValue}
-              </span>
-              <button
-                className="inline-block w-6 h-6 rounded-full bg-charcoal text-paper"
-                onClick={handleValueClear}
-              >
-                <span className="material-icons">close</span>
-              </button>
-            </>
-          ) : (
-            <span className="text-gray-500">Click to pick a color</span>
-          )}
-        </div>
-
-        {/* Hidden input connected to the form. */}
-        <input
-          hidden
-          id={name}
-          name={name}
-          {...rest}
-          {...formContext.register(name, { required })}
-        />
-        {messages}
-      </div>
-
+    <>
       <Modal isOpen={isOpen} onClose={closePanel}>
         <ColorPickerPanel
           value={internalValue}
@@ -161,9 +120,34 @@ function ColorPicker(props) {
           onClosePanel={closePanel}
         />
       </Modal>
-    </div>
+
+      {/* This is the input that shows the current value, but it is not connected to the form. */}
+      <div
+        className="form-input form-input-block flex justify-between items-center"
+        onClick={handleOpenPanel}
+      >
+        {internalValue ? (
+          <>
+            <span className="inline-block h-full -my-2 rounded-lg p-1" style={textStyle}>
+              {internalValue}
+            </span>
+            <button
+              className="inline-block w-6 h-6 rounded-full bg-charcoal text-paper"
+              onClick={handleValueClear}
+            >
+              <span className="material-icons">close</span>
+            </button>
+          </>
+        ) : (
+          <span className="text-gray-400">Click to pick a color</span>
+        )}
+      </div>
+
+      {/* Hidden input connected to the form. */}
+      <input hidden id={name} name={name} ref={ref} {...rest} />
+    </>
   );
-}
+});
 
 ColorPickerPanel.propTypes = {
   value: PropTypes.string,
@@ -178,7 +162,6 @@ ColorPicker.propTypes = {
   type: PropTypes.string,
   placeholder: PropTypes.string,
   required: PropTypes.bool,
-  messages: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
 };
 
 export default ColorPicker;

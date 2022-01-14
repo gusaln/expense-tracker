@@ -1,48 +1,27 @@
-import React from "react";
 import PropTypes from "prop-types";
-import { useFormContext } from "react-hook-form";
+import React, { forwardRef } from "react";
 
-function Select(props) {
-  const { register } = useFormContext();
-  const { name, label, options, required, messages, ...rest } = props;
-
+const Select = forwardRef(({ name, options, placeholder = undefined, ...rest }, ref) => {
   return (
-    <div className="flex justify-between items-start">
-      {label ? (
-        <label htmlFor={name} className="w-full md:w-4/12 py-2">
-          {label}
-        </label>
-      ) : (
-        ""
+    <select className="form-input form-input-block" defaultValue="" id={name} name={name} {...rest} ref={ref}>
+      {placeholder && (
+        <option className="text-gray-400" value="" disabled>
+          {placeholder}
+        </option>
       )}
-
-      <select
-        className="form-input w-full md:w-8/12"
-        id={name}
-        name={name}
-        {...rest}
-        {...register(name, { required })}
-      >
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.name}
-          </option>
-        ))}
-      </select>
-
-      {messages}
-    </div>
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>
+          {o.name}
+        </option>
+      ))}
+    </select>
   );
-}
+});
 
 Select.propTypes = {
-  label: PropTypes.string,
   name: PropTypes.string,
   placeholder: PropTypes.string,
   options: PropTypes.arrayOf(PropTypes.object).isRequired,
-  register: PropTypes.func.isRequired,
-  required: PropTypes.bool,
-  messages: PropTypes.any,
 };
 
 export default Select;

@@ -1,11 +1,12 @@
-import React, { useMemo } from "react";
 import PropTypes from "prop-types";
+import React, { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import Card from "./Card";
-import TextInput from "./TextInput";
 import Button from "./Button";
+import Card from "./Card";
 import ColorPicker from "./ColorPicker";
+import FormField from "./FormField";
 import IconPicker from "./IconPicker";
+import TextInput from "./TextInput";
 
 function mapError(errors, name) {
   if (errors[name]) {
@@ -35,12 +36,12 @@ function AccountForm(props) {
     return _original;
   }, [props.original]);
 
-  const methods = useForm({ defaultValues: original });
+  const formContext = useForm({ defaultValues: original });
   const {
     reset,
     handleSubmit,
     formState: { errors: formErrors },
-  } = methods;
+  } = formContext;
 
   const errors = useMemo(
     () => (props.errors ? { ...formErrors, ...props.errors } : formErrors),
@@ -60,16 +61,35 @@ function AccountForm(props) {
 
   return (
     <Card title={props.title}>
-      <FormProvider {...methods}>
+      <FormProvider {...formContext}>
         <form className="space-y-4" action="" method="post" onSubmit={handleSubmit(submit)}>
-          <TextInput label="Name" name="name" required messages={mapError(errors, "name")} />
-          <IconPicker label="Icon" name="icon" required messages={mapError(errors, "icon")} />
-          <ColorPicker label="Color" name="color" required messages={mapError(errors, "color")} />
-          <TextInput
+          <FormField
+            label="Name"
+            name="name"
+            required
+            messages={mapError(errors, "name")}
+            input={(props) => <TextInput {...props} />}
+          />
+          <FormField
+            label="Icon"
+            name="icon"
+            required
+            messages={mapError(errors, "icon")}
+            input={(props) => <IconPicker {...props} />}
+          />
+          <FormField
+            label="Color"
+            name="color"
+            required
+            messages={mapError(errors, "color")}
+            input={(props) => <ColorPicker {...props} />}
+          />
+          <FormField
             label="Currency (can't be modified)"
             name="currency"
             required
             messages={mapError(errors, "currency")}
+            input={(props) => <TextInput {...props} />}
           />
 
           <div className="flex justify-end pt-4 space-x-4">

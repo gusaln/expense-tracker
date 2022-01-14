@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { DATE_FORMAT, getEndOfTheMonth, getStartOfTheMonth, groupBy, parseDate } from "../utils";
 import useTransactions from "../hooks/useTransactions";
+import { DATE_FORMAT, getEndOfTheMonth, getStartOfTheMonth, groupBy, parseDate } from "../utils";
+import Button from "./Button";
 import Card from "./Card";
 import TransactionGroupHeader from "./TransactionGroupHeader";
 import TransactionsList from "./TransactionsList";
-import Button from "./Button";
 
 function TransactionsPanel() {
   const [monthOffset, setMonthOffset] = useState(0);
@@ -69,7 +69,7 @@ function TransactionsPanel() {
           </>
         }
       >
-        <p className="mb-4 text-sm text-gray-500">Click one to edit it</p>
+        <p className="mb-4 text-sm text-gray-400">Click one to edit it</p>
         <div className="space-y-4">{panelContent}</div>
       </Card>
     </div>

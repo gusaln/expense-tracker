@@ -1,12 +1,13 @@
-import React, { useMemo } from "react";
 import PropTypes from "prop-types";
-import Card from "./Card";
-import TextInput from "./TextInput";
-import Button from "./Button";
+import React, { useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import IconPicker from "./IconPicker";
+import Button from "./Button";
+import Card from "./Card";
 import ColorPicker from "./ColorPicker";
-import Switch from "./Switch";
+import FormField from "./FormField";
+import IconPicker from "./IconPicker";
+import SwitchInput from "./SwitchInput";
+import TextInput from "./TextInput";
 
 function mapError(errors, name) {
   if (errors[name]) {
@@ -63,11 +64,33 @@ function CategoryForm(props) {
     <Card title={props.title}>
       <FormProvider {...methods}>
         <form className="space-y-4" action="" method="post" onSubmit={handleSubmit(onSubmit)}>
-          <TextInput label="Name" name="name" required messages={mapError(errors, "name")} />
-          <IconPicker label="Icon" name="icon" required messages={mapError(errors, "icon")} />
-          <ColorPicker label="Color" name="color" required messages={mapError(errors, "color")} />
-
-          <Switch trueLabel="For expenses" falseLabel="For incomes" name="for_expenses" />
+          <FormField
+            label="Name"
+            name="name"
+            required
+            messages={mapError(errors, "name")}
+            input={(props) => <TextInput {...props} />}
+          />
+          <FormField
+            label="Icon"
+            name="icon"
+            required
+            messages={mapError(errors, "icon")}
+            input={(props) => <IconPicker {...props} />}
+          />
+          <FormField
+            label="Color"
+            name="color"
+            required
+            messages={mapError(errors, "color")}
+            input={(props) => <ColorPicker {...props} />}
+          />
+          <FormField
+            name="for_expenses"
+            input={(props) => (
+              <SwitchInput {...props} trueLabel="For expenses" falseLabel="For incomes" />
+            )}
+          />
 
           <div className="flex justify-end pt-4 space-x-4">
             <Button type="submit">{props.buttonText || "Create"}</Button>

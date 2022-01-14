@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import useCategories from "../hooks/useCategories";
-import CategoriesList from "./CategoriesList";
 import Card from "./Card";
+import CategoriesList from "./CategoriesList";
 
 function CategoriesPanel() {
   const { categories, isLoading, getCategories } = useCategories();
@@ -20,7 +20,7 @@ function CategoriesPanel() {
           <div>Loading...</div>
         ) : (
           <>
-            <p className="text-sm text-gray-500">Click one to edit it</p>
+            <p className="text-sm text-gray-400">Click one to edit it</p>
 
             <h4 className="text-sm mt-4 mb-2">Categories for expenses</h4>
             <CategoriesList categories={expensesCategories} />

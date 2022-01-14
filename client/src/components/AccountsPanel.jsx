@@ -26,7 +26,7 @@ export default function AccountsPanel() {
           <div>Loading...</div>
         ) : (
           <>
-            <p className="mb-4 text-sm text-gray-500">Click one to edit it</p>
+            <p className="mb-4 text-sm text-gray-400">Click one to edit it</p>
             <AccountsList accounts={accounts} />
           </>
         )}

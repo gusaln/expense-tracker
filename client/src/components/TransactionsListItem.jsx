@@ -30,7 +30,7 @@ function TransactionsListItem(props) {
           </div>
         </div>
 
-        <div className="flex justify-between text-gray-500">
+        <div className="flex justify-between text-gray-400">
           {props.type === "transfer" ? (
             <div>
               {props.account.name} -&gt; {props.transferred_to_account.name}

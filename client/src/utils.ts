@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import RRule, { Frequency, Weekday, WeekdayStr } from "rrule";
 
 dayjs.extend(customParseFormat);
 
@@ -10,9 +11,9 @@ export const DATE_FORMAT = "YYYY-MM-DDTHH:mm:ss.SSSZZ";
  *
  * If the date given is null, the function returns null.
  *
- * @param {string|number|Date} date A date string o unix timestamp in milliseconds
+ * @param date A date string o unix timestamp in milliseconds
  */
-export function parseDate(date) {
+export function parseDate(date: string | number | Date | null) {
   if (!date) {
     return null;
   }
@@ -58,7 +59,7 @@ export function parseDate(date) {
   ]);
 }
 
-export function parseBool(value) {
+export function parseBool(value: string | number) {
   switch (typeof value) {
     case "boolean":
       return value;
@@ -75,37 +76,27 @@ export function parseBool(value) {
 }
 
 /**
- * Determines if a date happends in the current month.
- *
- * @param {string|number|Date} date
- *
- * @returns {boolean}
+ * Determines if a date happens in the current month.
  */
-export function isDateThisMonth(date) {
+export function isDateThisMonth(date: string | number | Date): boolean {
   return parseDate(date).month() === new Date().getMonth();
 }
 
-/**
- * @param {string|number|Date} date
- */
-export function getStartOfTheMonth(date) {
+export function getStartOfTheMonth(date: string | number | Date) {
   return parseDate(date).startOf("month");
 }
 
-/**
- * @param {string|number|Date} date
- */
-export function getEndOfTheMonth(date) {
+export function getEndOfTheMonth(date: string | number | Date) {
   return parseDate(date).endOf("month");
 }
 
 /**
  * Generates a class string.
  *
- * @param {Record<string,boolean>} classes
- * @param {string} staticClasses Classes that always apply
+ * @param classes
+ * @param staticClasses Classes that always apply
  */
-export function classname(classes, staticClasses = "") {
+export function classname(classes: Record<string, boolean>, staticClasses = "") {
   return Object.entries(classes)
     .filter(([, condition]) => condition)
     .map(([className]) => className)
@@ -114,16 +105,14 @@ export function classname(classes, staticClasses = "") {
 }
 
 /**
- * Calculate the brightness of an RGB color
+ * Calculates the brightness of an RGB color
  *
  * @see https://www.w3.org/TR/AERT/#color-contrast
- *
- * @param {string} rgb
  */
-export function computeBrightnessFromRGB(rgb) {
-  let r;
-  let g;
-  let b;
+export function computeBrightnessFromRGB(rgb: string) {
+  let r: number;
+  let g: number;
+  let b: number;
 
   const rbgNumber = parseInt(rgb.slice(1), 16);
   if (rgb.length === 4) {
@@ -147,37 +136,40 @@ export function computeBrightnessFromRGB(rgb) {
  * Computes the contrast ratio of two colors.
  *
  * @see https://www.w3.org/TR/WCAG/#dfn-contrast-ratio
- *
- * @param {number} lighterColor
- * @param {number} darkerColor
- * @returns
  */
-export function computeContrastRatio(lighterColor, darkerColor) {
+export function computeContrastRatio(lighterColor: number, darkerColor: number): number {
   return (lighterColor + 0.05) / (darkerColor + 0.05);
 }
 
 /**
  * Checks if a color is light
  *
- * @param {string} color
- * @param {number} offset allows to skew the selection by moving the target brightness up or down (between -125 and 125)
+ * @param color
+ * @param offset allows to skew the selection by moving the target brightness up or down (between -125 and 125)
  */
- export function isDarkColor(color, offset = 0) {
+export function isDarkColor(color: string, offset = 0) {
   // https://www.w3.org/TR/AERT/#color-contrast suggests a maximum brightness difference of 125.
   // Since the brightness of black is 0, the brightness of any color is its difference with black.
   return computeBrightnessFromRGB(color) < Math.max(0, 125 + offset);
 }
 
+type GetterFn<T> = (el: T) => string;
+type Getter<T> = keyof T | GetterFn<T>;
+
+type Element = object;
+
+const createGetter = <T>(getter: Getter<T>) =>
+  typeof getter === "function" ? getter : (el: T) => String(el[getter]);
+
 /**
  * Groups elements from a collection of elements
  *
- * @param {any[]} elements The array of elements.
- * @param {string|(el: any) => any} getter Element attribute or getter function for the key of the
- * groups.
- * @returns {Record<any,any[]>}
+ * @param elements The array of elements.
+ * @param getter Element attribute or getter function for the key of the
+ *  groups.
  */
-export function groupBy(elements, getter) {
-  const _getter = typeof getter === "string" ? (el) => el[getter] : getter;
+export function groupBy<T extends Element>(elements: T[], getter: Getter<T>) {
+  const _getter = createGetter(getter);
 
   return elements.reduce((groups, el) => {
     const key = _getter(el);
@@ -189,25 +181,23 @@ export function groupBy(elements, getter) {
     }
 
     return groups;
-  }, {});
+  }, {} as Record<string, T[]>);
 }
 
 /**
  * Creates a map from a collection of elements
  *
- * @param {any[]} elements The array of elements.
- * @param {string|(el: any) => any} getter Element attribute or getter function for the key of the
- * groups.
- * @returns {Record<any,any>}
+ * @param elements The array of elements.
+ * @param getter Element attribute or getter function for the key.
  */
-export function keyBy(elements, getter) {
-  const _getter = typeof getter === "string" ? (el) => el[getter] : getter;
+export function keyBy<T extends Element>(elements: T[], getter: Getter<T>) {
+  const _getter = createGetter(getter);
 
   return elements.reduce((groups, el) => {
     const key = _getter(el);
     groups[key] = el;
     return groups;
-  }, {});
+  }, {} as Record<string, T>);
 }
 
 const numberFormatter = Intl.NumberFormat(undefined, {
@@ -216,25 +206,22 @@ const numberFormatter = Intl.NumberFormat(undefined, {
 
 /**
  * Formats a number according to the current locale
- *
- * @param {number|String} number
- * @returns {String}
  */
-export function formatNumber(number) {
+export function formatNumber(number: number | bigint): string {
   return numberFormatter.format(number);
 }
 
 /**
- * @param {Function} fn The function
- * @param {number} delay A delay in ms
+ * @param fn The function
+ * @param delay A delay in ms
  */
-export function debounce(fn, delay) {
+export function debounce<T extends (...args: any) => any>(fn: T, delay: number) {
   let handler = null;
 
-  return function (...args) {
+  return function (...args: Parameters<typeof fn>) {
     if (handler) clearTimeout(handler);
     handler = setTimeout(() => {
-      fn(...args);
+      fn(...(args as any));
     }, delay);
   };
 }

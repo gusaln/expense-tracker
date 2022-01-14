@@ -18,6 +18,8 @@ Button.propTypes = {
   small: PropTypes.bool,
   text: PropTypes.bool,
   disabled: PropTypes.bool,
+  onClick: PropTypes.func,
+  children: PropTypes.any,
 };
 
 export default Button;

@@ -3,7 +3,7 @@ import { fetchCategories } from "../api";
 
 export default function useCategories() {
   const [categories, setCategories] = useState([]);
-  const [isLoading, setLoading] = useState([]);
+  const [isLoading, setLoading] = useState(false);
   const getCategories = useCallback(async (search) => {
     setLoading(true);
     setCategories(await fetchCategories(search));

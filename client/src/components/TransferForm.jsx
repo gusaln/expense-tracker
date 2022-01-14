@@ -5,8 +5,12 @@ import useAccounts from "../hooks/useAccounts";
 import { parseDate } from "../utils";
 import Button from "./Button";
 import Card from "./Card";
+import DateInput from "./DateInput";
+import FormField from "./FormField";
+import LoadingWhile from "./LoadingWhile";
 import Select from "./Select";
 import TextInput from "./TextInput";
+import TimeInput from "./TimeInput";
 
 function mapError(errors, name) {
   if (errors[name]) {
@@ -45,12 +49,12 @@ function TransferForm(props) {
     return _original;
   }, [props.original]);
 
-  const methods = useForm({ defaultValues: original });
+  const formContext = useForm({ defaultValues: original });
   const {
     reset,
     handleSubmit,
     formState: { errors: formErrors },
-  } = methods;
+  } = formContext;
 
   const { accounts, isLoading: accountsLoading, getAccounts } = useAccounts();
 
@@ -77,51 +81,75 @@ function TransferForm(props) {
 
   return (
     <Card title={props.title}>
-      <FormProvider {...methods}>
+      <FormProvider {...formContext}>
         <form className="space-y-4" action="" method="post" onSubmit={handleSubmit(onSubmit)}>
-          <TextInput
+          <FormField
             label="Description"
             name="description"
             required
             messages={mapError(errors, "description")}
+            input={(props) => <TextInput {...props} />}
           />
-          <TextInput label="Amount" name="amount" required messages={mapError(errors, "amount")} />
-          {accountsLoading ? (
-            <div>Loading...</div>
-          ) : (
-            <Select
-              label="From account"
-              name="account_id"
-              required
-              options={accounts.map((a) => ({
-                name: `${a.name} (${a.current_balance.amount} ${a.current_balance.currency})`,
-                value: a.id,
-              }))}
-              messages={mapError(errors, "account_id")}
-            />
-          )}
-          {accountsLoading ? (
-            <div>Loading...</div>
-          ) : (
-            <Select
-              label="To account"
-              name="transferred_to"
-              required
-              options={accounts.map((a) => ({
-                name: `${a.name} (${a.current_balance.amount} ${a.current_balance.currency})`,
-                value: a.id,
-              }))}
-              messages={mapError(errors, "transferred_to")}
-            />
-          )}
-          <TextInput
+
+          <FormField
+            label="Amount"
+            name="amount"
+            required
+            messages={mapError(errors, "amount")}
+            input={(props) => <TextInput {...props} />}
+          />
+
+          <FormField
+            label="From account"
+            name="account_id"
+            required
+            messages={mapError(errors, "account_id")}
+            input={(props) => (
+              <LoadingWhile isLoading={accountsLoading}>
+                <Select
+                  {...props}
+                  options={accounts.map((a) => ({
+                    name: `${a.name} (${a.current_balance.amount} ${a.current_balance.currency})`,
+                    value: a.id,
+                  }))}
+                />
+              </LoadingWhile>
+            )}
+          />
+
+          <FormField
+            label="To account"
+            name="transferred_to"
+            required
+            messages={mapError(errors, "transferred_to")}
+            input={(props) => (
+              <LoadingWhile isLoading={accountsLoading}>
+                <Select
+                  {...props}
+                  options={accounts.map((a) => ({
+                    name: `${a.name} (${a.current_balance.amount} ${a.current_balance.currency})`,
+                    value: a.id,
+                  }))}
+                />
+              </LoadingWhile>
+            )}
+          />
+
+          <FormField
             label="Date"
             name="date"
-            type="date"
             required
             messages={mapError(errors, "date")}
+            input={(props) => <DateInput {...props} />}
           />
-          <TextInput label="Time" name="time" type="time" required />
+
+          <FormField
+            label="Time"
+            name="time"
+            type="time"
+            required
+            input={(props) => <TimeInput {...props} />}
+          />
 
           <div className="flex justify-end pt-4 space-x-4">
             <Button type="submit">{props.buttonText || "Create"}</Button>
