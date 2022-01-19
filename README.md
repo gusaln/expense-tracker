@@ -23,6 +23,7 @@ To see the design documents, check the `docs` folder.
 - [x] Categories and accounts have a color and an icon for easy identification.
 - [x] Color and Icon picker UI components.
 - [x] Recurrent transactions.
+- [ ] Rewrite all queires into TypeORM to make the logic more readable.
 - [ ] Calculator UI component for amounts.
 - [ ] Multi-currency support.
   - [x] Accounts have currencies.
