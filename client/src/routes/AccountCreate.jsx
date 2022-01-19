@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { addAccount } from "../api";
+import AccountForm from "../components/AccountForm";
 import Alert from "../components/Alert";
 import Button from "../components/Button";
-import AccountForm from "../components/AccountForm";
 
 export default function AccountCreate() {
   const [success, setSuccess] = useState(null);
@@ -25,7 +25,7 @@ export default function AccountCreate() {
     if (error) {
       return (
         <Alert type="error" onClose={() => setError(null)} closable>
-          {error.message || "There was an error proccessing the request."}
+          {error.message || "There was an error processing the request."}
         </Alert>
       );
     }
@@ -44,7 +44,7 @@ export default function AccountCreate() {
   if (isLoading) {
     return (
       <div className="w-11/12 mx-auto md:w-10/12 md:my-8 lg:w-8/12">
-        <Alert type="info">Proccessing...</Alert>
+        <Alert type="info">processing...</Alert>
       </div>
     );
   }

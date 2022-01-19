@@ -67,7 +67,7 @@ export default function TransferEdit() {
     if (error) {
       return (
         <Alert type="error" onClose={() => setError(null)} closable>
-          {error.message || "There was an error proccessing the request."}
+          {error.message || "There was an error processing the request."}
         </Alert>
       );
     }

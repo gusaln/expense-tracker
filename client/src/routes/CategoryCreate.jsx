@@ -25,7 +25,7 @@ export default function CategoryCreate() {
     if (error) {
       return (
         <Alert type="error" onClose={() => setError(null)} closable>
-          {error.message || "There was an error proccessing the request."}
+          {error.message || "There was an error processing the request."}
         </Alert>
       );
     }
@@ -44,7 +44,7 @@ export default function CategoryCreate() {
   if (isLoading) {
     return (
       <div className="w-11/12 mx-auto md:w-10/12 md:my-8 lg:w-8/12">
-        <Alert type="info">Proccessing...</Alert>
+        <Alert type="info">processing...</Alert>
       </div>
     );
   }

@@ -115,6 +115,12 @@ export async function getTransfer(id) {
   return data.data;
 }
 
+export async function getRecurrence(id) {
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/recurrences/${id}`);
+
+  return data.data;
+}
+
 export async function addAccount(account) {
   await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/accounts`, {
     method: "post",
@@ -209,6 +215,26 @@ export async function updateTransfer(id, transfer) {
   const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/transfers/${id}`, {
     method: "put",
     body: JSON.stringify(transfer),
+    headers: { "content-type": "application/json" },
+  });
+
+  return data.data;
+}
+
+export async function upsertIncomeRecurrence(incomeId, recurrence) {
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/incomes/${incomeId}/recurrence`, {
+    method: "put",
+    body: JSON.stringify(recurrence),
+    headers: { "content-type": "application/json" },
+  });
+
+  return data.data;
+}
+
+export async function upsertExpenseRecurrence(expenseId, recurrence) {
+  const data = await httpRequest(`${process.env.REACT_APP_BASE_URL}/api/v1/expenses/${expenseId}/recurrence`, {
+    method: "put",
+    body: JSON.stringify(recurrence),
     headers: { "content-type": "application/json" },
   });
 

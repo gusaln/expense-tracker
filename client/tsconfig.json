@@ -23,8 +23,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "strict": true,
+    // "strict": true,
+
+    "noEmit": true,
 
     "skipLibCheck": true,
+
+    "jsx": "react",
   },
 }

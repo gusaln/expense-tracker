@@ -1,3 +1,4 @@
+import { Knex } from "knex";
 import { addBalanceToAccount, subtractBalanceToAccount } from "../../accounts/queries";
 import { AccountDbId } from "../../accounts/types";
 import db from "../../db";
@@ -5,7 +6,7 @@ import ResourceNotFoundError from "../../errors/resourceNotFoundError";
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
-  TRANSACTION_TYPE_TRANSFER,
+  TRANSACTION_TYPE_TRANSFER
 } from "../constants";
 import { TransactionDbId, TransactionType } from "../types";
 import { findTransactionById } from "./findTransactionById";
@@ -18,7 +19,11 @@ import { findTransactionById } from "./findTransactionById";
  * @throws {ResourceNotFoundError} if the transaction does not exist.
  */
 
-export async function deleteTransaction(id: TransactionDbId, type?: TransactionType) {
+export async function deleteTransaction(
+  id: TransactionDbId,
+  type?: TransactionType,
+  connection?: Knex
+) {
   // Checks if transaction exists
   const transaction = await findTransactionById(id);
 
@@ -26,7 +31,7 @@ export async function deleteTransaction(id: TransactionDbId, type?: TransactionT
     throw new ResourceNotFoundError(`Transaction ID ${id} not found.`);
   }
 
-  db.transaction(async (trx) => {
+  await (connection || db).transaction(async (trx) => {
     await trx.table("transactions").where({ id }).del();
 
     switch (transaction.type) {

@@ -66,7 +66,9 @@ function ExpenseForm(props) {
   const { categories, isLoading: categoriesLoading, getCategories } = useCategories();
 
   function onSubmit(data) {
-    props.onSubmit({
+    // console.log("ExpenseForm.onSubmit", { data });
+
+    props?.onSubmit({
       account_id: data.account_id,
       category_id: data.category_id,
       description: data.description,
@@ -109,6 +111,7 @@ function ExpenseForm(props) {
               <LoadingWhile isLoading={accountsLoading}>
                 <Select
                   {...props}
+                  placeholder="Select an Account"
                   options={accounts.map((a) => ({
                     name: `${a.name} (${a.current_balance.amount} ${a.current_balance.currency})`,
                     value: a.id,
@@ -127,6 +130,7 @@ function ExpenseForm(props) {
               <LoadingWhile isLoading={categoriesLoading}>
                 <Select
                   {...props}
+                  placeholder="Select a Category"
                   options={categories.map((c) => ({ name: c.name, value: c.id }))}
                 />
               </LoadingWhile>

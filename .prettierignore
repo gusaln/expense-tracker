@@ -1,4 +1,3 @@
-docs
 volumes
 
 # don't ever lint node_modules

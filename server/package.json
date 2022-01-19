@@ -2,11 +2,13 @@
   "name": "expense-tracker/server",
   "version": "1.0.0",
   "description": "A basic expense tracker app",
-  "main": "build/index.js",
+  "main": "build/start.js",
   "scripts": {
     "db": "knex --knexfile config/database.js",
-    "start": "node --trace-warnings build/index.js",
-    "dev": "nodemon src/index.ts",
+    "start": "node --trace-warnings build/start.js",
+    "generate": "node build/generateRecurrentTransactions.js",
+    "dev": "nodemon src/start.ts",
+    "dev:generate": "node src/generateRecurrentTransactions.ts",
     "test": "mocha --exit"
   },
   "keywords": [],
@@ -24,7 +26,8 @@
     "helmet": "^4.4.1",
     "knex": "^0.95.6",
     "morgan": "^1.10.0",
-    "pg": "^8.6.0"
+    "pg": "^8.6.0",
+    "rrule": "^2.6.8"
   },
   "devDependencies": {
     "@types/big.js": "^6.1.2",

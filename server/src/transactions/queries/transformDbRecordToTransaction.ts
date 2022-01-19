@@ -6,6 +6,7 @@ export function transformDbRecordToTransaction<T extends TransactionType>(
   return {
     id: Number(dbTransaction.id),
     type: dbTransaction.type,
+    recurrence_id: dbTransaction.recurrence_id,
     account_id: Number(dbTransaction.account_id),
     category_id: dbTransaction.category_id,
     description: dbTransaction.description,

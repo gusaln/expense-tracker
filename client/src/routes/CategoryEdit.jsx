@@ -3,8 +3,8 @@ import { Link, useHistory, useParams } from "react-router-dom";
 import { deleteCategory, getCategory, updateCategory } from "../api";
 import Alert from "../components/Alert";
 import Button from "../components/Button";
-import DangerButton from "../components/DangerButton";
 import CategoryEditForm from "../components/CategoryEditForm";
+import DangerButton from "../components/DangerButton";
 import NotFound from "./NotFound";
 
 export default function CategoryEdit() {
@@ -67,7 +67,7 @@ export default function CategoryEdit() {
     if (error) {
       return (
         <Alert type="error" onClose={() => setError(null)} closable>
-          {error.message || "There was an error proccessing the request."}
+          {error.message || "There was an error processing the request."}
         </Alert>
       );
     }

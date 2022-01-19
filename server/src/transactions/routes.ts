@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Router } from "express";
-import { findMultipleAccountsById } from "../accounts/queries";
-import { findMultipleCategoriesById } from "../categories/queries";
+import { findManyAccountsById } from "../accounts/queries";
+import { findManyCategoriesById } from "../categories/queries";
 import { CategoryDbId } from "../categories/types";
 import { keyBy, unique } from "../utils/arrays";
 import { parseDate } from "../utils/date";
@@ -46,7 +46,7 @@ transactionRoutes.get("/", async (req, res, next) => {
     );
 
     const accounts = keyBy(
-      await findMultipleAccountsById(
+      await findManyAccountsById(
         unique(
           transactions
             .map((t) => t.account_id)
@@ -58,7 +58,7 @@ transactionRoutes.get("/", async (req, res, next) => {
     );
 
     const categories = keyBy(
-      await findMultipleCategoriesById(
+      await findManyCategoriesById(
         unique(transactions.map((t) => t.category_id).filter((id) => id)) as CategoryDbId[]
       ),
       "id"

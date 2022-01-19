@@ -50,11 +50,11 @@ export const findAccountById = async (id: AccountDbId): Promise<Account> => {
 };
 
 /**
- * Finds multiple accounts by its their ids
+ * Finds many accounts by their ids
  *
  * @throws A ResourceNotFoundError error if the account does not exist.
  */
-export const findMultipleAccountsById = async (ids: AccountDbId | AccountDbId[]) => {
+export const findManyAccountsById = async (ids: AccountDbId | AccountDbId[]) => {
   ids = Array.from(new Set(Array.isArray(ids) ? ids : [ids]));
 
   ids.forEach((id) => {
@@ -72,7 +72,7 @@ export const findMultipleAccountsById = async (ids: AccountDbId | AccountDbId[])
 };
 
 /**
- * Persistes an accounts to the database
+ * Persists an accounts to the database
  */
 export const createAccount = async (data: AccountNew): Promise<Account> => {
   const newAccounts = await db

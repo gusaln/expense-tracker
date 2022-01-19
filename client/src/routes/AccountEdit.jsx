@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { deleteAccount, getAccount, updateAccount } from "../api";
+import AccountEditForm from "../components/AccountEditForm";
 import Alert from "../components/Alert";
 import Button from "../components/Button";
 import DangerButton from "../components/DangerButton";
-import AccountEditForm from "../components/AccountEditForm";
 import NotFound from "./NotFound";
 
 export default function AccountEdit() {
@@ -67,7 +67,7 @@ export default function AccountEdit() {
     if (error) {
       return (
         <Alert type="error" onClose={() => setError(null)} closable>
-          {error.message || "There was an error proccessing the request."}
+          {error.message || "There was an error processing the request."}
         </Alert>
       );
     }

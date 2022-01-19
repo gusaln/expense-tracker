@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import RRule, { Frequency, Weekday, WeekdayStr } from "rrule";
 
 dayjs.extend(customParseFormat);
 
@@ -225,3 +224,7 @@ export function debounce<T extends (...args: any) => any>(fn: T, delay: number) 
     }, delay);
   };
 }
+
+
+export * from './recurrence';
+

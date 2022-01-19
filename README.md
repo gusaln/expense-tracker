@@ -20,18 +20,17 @@ To see the design documents, check the `docs` folder.
 - [x] Move money between accounts using transfers.
 - [x] Organize money in accounts.
 - [x] Organize transactions in categories.
-- [x] Show current balance and current month incomes and expenses.
 - [x] Categories and accounts have a color and an icon for easy identification.
-- [x] Filter transactions by month.
-- [ ] Filter transactions by accounts.
-- [ ] Filter transactions by category.
-- [ ] Compute statistics by account, category and date.
-- [ ] Recurrent transactions.
+- [x] Color and Icon picker UI components.
+- [x] Recurrent transactions.
+- [ ] Calculator UI component for amounts.
 - [ ] Multi-currency support.
   - [x] Accounts have currencies.
   - [ ] Set a default currency to display the UI.
   - [ ] Assign conversion rates between currencies.
-- [ ] Icon picker.
+- [ ] Summaries
+  - [x] Show current balance and current month incomes and expenses.
+  - [ ] Show statistics by category.
 
 ## How to test?
 
@@ -105,9 +104,10 @@ You need node `16.x` and postgres `13.x` running.
    npm i
    ```
 10. Start the back-end by running
-   ```
-   npm run start
-   ```
+
+```
+npm run start
+```
 
 ### Changing the ports
 

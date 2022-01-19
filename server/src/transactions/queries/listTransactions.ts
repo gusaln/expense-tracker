@@ -2,6 +2,7 @@
 import { AccountDbId } from "../../accounts/types";
 import { CategoryDbId } from "../../categories/types";
 import db from "../../db";
+import { RecurrentTransactionDefinitionDbId } from "../../recurrentTransactions/types";
 import { Transaction, TransactionDbRecord, TransactionType } from "../types";
 import { transformDbRecordToTransaction } from "./transformDbRecordToTransaction";
 
@@ -9,6 +10,7 @@ export type ListTransactionsFilters = {
   type?: TransactionType;
   account_id?: AccountDbId;
   category_id?: CategoryDbId;
+  recurrence_id?: RecurrentTransactionDefinitionDbId;
   before?: Date;
   after?: Date;
 };
@@ -31,6 +33,10 @@ export async function listTransactions(filters: ListTransactionsFilters = {}, or
 
   if (filters.category_id) {
     query.where({ category_id: filters.category_id });
+  }
+
+  if (filters.recurrence_id) {
+    query.where({ recurrence_id: filters.recurrence_id });
   }
 
   if (filters.before) {

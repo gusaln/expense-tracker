@@ -1,19 +1,27 @@
+import { Knex } from "knex";
 import db, { isInvalidId } from "../db";
 import ResourceNotFoundError from "../errors/resourceNotFoundError";
+import { RecurrentTransactionDefinitionDbId } from "../recurrentTransactions/types";
 import { TRANSACTION_TYPE_INCOME } from "../transactions/constants";
 import {
   createTransaction,
   deleteTransaction,
   listTransactions,
-  updateTransaction,
+  updateTransaction
 } from "../transactions/queries";
-import { IncomeTransaction, TransactionDbRecord, TransactionNew } from "../transactions/types";
+import {
+  IncomeTransaction,
+  TransactionDbRecord,
+  TransactionNew,
+  TransactionUpdate
+} from "../transactions/types";
 import { Income, IncomeDbId, IncomeNew, IncomeUpdate } from "./types";
 
 type IncomeSelector = typeof TRANSACTION_TYPE_INCOME;
 
 const transformDbRecordToIncome = (dbIncome: TransactionDbRecord<IncomeSelector>): Income => ({
   id: Number(dbIncome.id),
+  recurrence_id: dbIncome.recurrence_id,
   account_id: Number(dbIncome.account_id),
   category_id: Number(dbIncome.category_id),
   description: dbIncome.description,
@@ -25,6 +33,7 @@ const transformDbRecordToIncome = (dbIncome: TransactionDbRecord<IncomeSelector>
 
 const transformIncomeTransactionToIncome = (dbIncome: IncomeTransaction): Income => ({
   id: Number(dbIncome.id),
+  recurrence_id: dbIncome.recurrence_id,
   account_id: Number(dbIncome.account_id),
   category_id: Number(dbIncome.category_id),
   description: dbIncome.description,
@@ -69,17 +78,20 @@ export const findIncomeById = async (id: IncomeDbId): Promise<Income> => {
 };
 
 /**
- * Persistes an incomes to the database
+ * Persists an incomes to the database
  */
-export const createIncome = async (data: IncomeNew): Promise<Income> => {
-  const newIncome = await createTransaction({
-    type: TRANSACTION_TYPE_INCOME,
-    account_id: data.account_id,
-    category_id: data.category_id,
-    description: data.description,
-    amount: data.amount,
-    date: data.date,
-  } as TransactionNew<"income">);
+export const createIncome = async (data: IncomeNew, connection?: Knex): Promise<Income> => {
+  const newIncome = await createTransaction(
+    {
+      type: TRANSACTION_TYPE_INCOME,
+      account_id: data.account_id,
+      category_id: data.category_id,
+      description: data.description,
+      amount: data.amount,
+      date: data.date,
+    } as TransactionNew<"income">,
+    connection
+  );
 
   return transformIncomeTransactionToIncome(newIncome);
 };
@@ -89,15 +101,26 @@ export const createIncome = async (data: IncomeNew): Promise<Income> => {
  *
  * @throws {ResourceNotFound} if the income does not exist.
  */
-export const updateIncome = async (id: IncomeDbId, data: IncomeUpdate): Promise<Income> => {
+export const updateIncome = async (
+  id: IncomeDbId,
+  data: IncomeUpdate,
+  connection?: Knex
+): Promise<Income> => {
   try {
-    const updatedIncome = await updateTransaction(id, {
-      account_id: data.account_id,
-      category_id: data.category_id,
-      description: data.description,
-      amount: data.amount,
-      date: data.date,
-    } as TransactionNew<"income">);
+    const updatedIncome = await updateTransaction(
+      id,
+      {
+        id,
+        type: "income",
+        account_id: data.account_id,
+        category_id: data.category_id,
+        transferred_to: undefined,
+        description: data.description,
+        amount: data.amount,
+        date: data.date,
+      },
+      connection
+    );
     return transformIncomeTransactionToIncome(updatedIncome);
   } catch (error) {
     if (error instanceof ResourceNotFoundError) {
@@ -109,13 +132,66 @@ export const updateIncome = async (id: IncomeDbId, data: IncomeUpdate): Promise<
 };
 
 /**
+ * Updates many incomes in a series.
+ */
+export const updateManyIncomesInSeries = async (
+  recurrenceId: RecurrentTransactionDefinitionDbId,
+  data: Omit<IncomeUpdate, "date">,
+  connection?: Knex
+): Promise<void> => {
+  (await listTransactions({ recurrence_id: recurrenceId, type: TRANSACTION_TYPE_INCOME })).forEach(
+    async (incomeTr) => {
+      await updateTransaction(
+        incomeTr.id,
+        {
+          account_id: data.account_id,
+          category_id: data.category_id,
+          description: data.description,
+          amount: data.amount,
+        } as TransactionUpdate<"income">,
+        connection
+      );
+    }
+  );
+};
+
+/**
+ * Updates many incomes in a series.
+ */
+export const updateManyIncomesInSeriesBefore = async (
+  recurrenceId: RecurrentTransactionDefinitionDbId,
+  before: Date,
+  data: IncomeUpdate,
+  connection?: Knex
+): Promise<void> => {
+  (
+    await listTransactions({
+      recurrence_id: recurrenceId,
+      type: TRANSACTION_TYPE_INCOME,
+      before: before,
+    })
+  ).forEach(async (incomeTr) => {
+    await updateTransaction(
+      incomeTr.id,
+      {
+        account_id: data.account_id,
+        category_id: data.category_id,
+        description: data.description,
+        amount: data.amount,
+      } as TransactionUpdate<"income">,
+      connection
+    );
+  });
+};
+
+/**
  * Deletes an income
  *
  * @throws {ResourceNotFound} if the income does not exist.
  */
-export const deleteIncome = async (id: IncomeDbId): Promise<void> => {
+export const deleteIncome = async (id: IncomeDbId, connection?: Knex): Promise<void> => {
   try {
-    await deleteTransaction(id, TRANSACTION_TYPE_INCOME);
+    await deleteTransaction(id, TRANSACTION_TYPE_INCOME, connection);
   } catch (error) {
     if (error instanceof ResourceNotFoundError) {
       throw new ResourceNotFoundError(`Income ID ${id} not found.`);

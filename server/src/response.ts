@@ -1,5 +1,3 @@
-// import { ValidationResult } from 'fastify';
-// import { FastifyError } from 'fastify-error';
 import { ErrorObject } from "ajv";
 import BaseError from "./errors/baseError";
 import ValidationError from "./validation/validationError";

@@ -1,9 +1,9 @@
-import React from "react";
 import PropTypes from "prop-types";
+import React from "react";
 
 function LoadingWhile(props) {
   if (props.isLoading) {
-    <div>Loading...</div>;
+    return <div>Loading...</div>;
   }
 
   return <>{props.children}</>;

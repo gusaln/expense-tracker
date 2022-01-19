@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { RECURRENCE_FIELDS } from "../constants";
 import useAccounts from "../hooks/useAccounts";
 import useCategories from "../hooks/useCategories";
 import { parseDate } from "../utils";
@@ -65,7 +64,6 @@ function IncomeForm(props) {
 
   const { accounts, isLoading: accountsLoading, getAccounts } = useAccounts();
   const { categories, isLoading: categoriesLoading, getCategories } = useCategories();
-
   function onSubmit(data) {
     props?.onSubmit({
       account_id: data.account_id,
@@ -73,9 +71,6 @@ function IncomeForm(props) {
       description: data.description,
       amount: data.amount,
       date: parseDate(data.date + " " + data.time),
-      recurrence: {
-        ...Object.fromEntries(RECURRENCE_FIELDS.map((attr) => [attr, data[attr]])),
-      },
     });
   }
 

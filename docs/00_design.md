@@ -92,14 +92,14 @@ I prefer to have the balances ready at hand so I choose the later.
 
 Here we have a basic diagram for the design.
 
-![Design diagram](design.assets/expense-tracker-design.svg)
+![Design diagram](00_design.assets/expense-tracker-design.svg)
 
 ### Storage
 
 For storage, I squashed all the transactions in one table and use the `transactions.type` column to tell them apart.
 Which means I do not have to unite them when querying all the transactions that happened in a period, but it is still simple to filter them by type.
 
-![Storage diagram](design.assets/expense-tracker-storage.svg)
+![Storage diagram](00_design.assets/expense-tracker-storage.svg)
 
 ## Design short-comings
 

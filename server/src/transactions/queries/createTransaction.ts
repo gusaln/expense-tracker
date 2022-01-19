@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { Knex } from "knex";
 import { addBalanceToAccount, subtractBalanceToAccount } from "../../accounts/queries";
 import { AccountDbId } from "../../accounts/types";
 import db from "../../db";
@@ -18,7 +18,8 @@ import { transformDbRecordToTransaction } from "./transformDbRecordToTransaction
  * Persists an transactions to the database
  */
 export async function createTransaction<T extends TransactionType>(
-  data: TransactionNew<T>
+  data: TransactionNew<T>,
+  connection ?: Knex
 ): Promise<TransactionOfType<T>> {
   if (!(await isValidAccountId(data.account_id))) {
     throw new ApiError("Value of account_id is not a valid account ID.", 422);
@@ -34,7 +35,7 @@ export async function createTransaction<T extends TransactionType>(
     }
   }
 
-  const newTransactions = await db.transaction(async (trx) => {
+  const newTransactions = await (connection || db).transaction(async (trx) => {
     switch (data.type) {
       case TRANSACTION_TYPE_INCOME:
         await addBalanceToAccount(data.account_id, data.amount, trx);
@@ -50,7 +51,7 @@ export async function createTransaction<T extends TransactionType>(
         break;
 
       default:
-        throw new Error(`Transaction has invalid type ${(data as any).type}.`);
+        throw new Error(`Transaction has invalid type ${data.type}.`);
     }
 
     return await trx

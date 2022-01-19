@@ -1,3 +1,4 @@
+import { Knex } from "knex";
 import db, { isInvalidId } from "../../db";
 import ResourceNotFoundError from "../../errors/resourceNotFoundError";
 import { Transaction, TransactionDbId } from "../types";
@@ -8,13 +9,15 @@ import { transformDbRecordToTransaction } from "./transformDbRecordToTransaction
  *
  * @throws {ResourceNotFoundError} if the transaction does not exist.
  */
-
-export async function findTransactionById(id: TransactionDbId): Promise<Transaction> {
+export async function findTransactionById(
+  id: TransactionDbId,
+  connection?: Knex
+): Promise<Transaction> {
   if (isInvalidId(id)) {
     throw new ResourceNotFoundError(`Transaction ID ${id} not found.`);
   }
 
-  const transactions = await db.table("transactions").where({ id }).limit(1);
+  const transactions = await (connection || db).table("transactions").where({ id }).limit(1);
 
   if (transactions.length === 0) {
     throw new ResourceNotFoundError(`Transaction ID ${id} not found.`);

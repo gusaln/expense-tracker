@@ -4,13 +4,13 @@ import { CategoryDbId } from "../categories/types";
 import {
   TRANSACTION_TYPE_EXPENSE,
   TRANSACTION_TYPE_INCOME,
-  TRANSACTION_TYPE_TRANSFER,
+  TRANSACTION_TYPE_TRANSFER
 } from "./constants";
 import {
   ExpenseTransactionSchema,
   IncomeTransactionSchema,
   TransactionSchema,
-  TransferTransactionSchema,
+  TransferTransactionSchema
 } from "./schemas";
 
 export type IncomeOrExpenseTransactionType =
@@ -47,7 +47,7 @@ type ExtractTransactionType<T extends WithTransactionType> = T extends { type: T
 
 /** Any transaction */
 export interface Transaction<TType extends TransactionType = TransactionType>
-  extends Pick<Static<typeof TransactionSchema>, "id" | "account_id" | "description" | "amount"> {
+  extends Pick<Static<typeof TransactionSchema>, "id" | "account_id" | "recurrence_id" | "description" | "amount"> {
   type: TType;
   category_id: TType extends IncomeOrExpenseTransactionType ? CategoryDbId : undefined;
   transferred_to: TType extends TransferTransactionType ? AccountDbId : undefined;
@@ -71,14 +71,14 @@ export type TransactionNew<TType extends TransactionType = TransactionType> = {
   account_id: AccountDbId;
   category_id: TType extends IncomeOrExpenseTransactionType ? CategoryDbId : undefined;
   transferred_to: TType extends TransferTransactionType ? AccountDbId : undefined;
-} & Pick<Transaction, "date" | "description" | "amount">;
+} & Pick<Transaction, "recurrence_id" | "date" | "description" | "amount">;
 
 export type TransactionUpdate<TType extends TransactionType = TransactionType> = {
   type: TType;
   account_id: AccountDbId;
   category_id: TType extends IncomeOrExpenseTransactionType ? CategoryDbId : undefined;
   transferred_to: TType extends TransferTransactionType ? AccountDbId : undefined;
-} & Pick<Transaction, "date" | "description" | "amount">;
+} & Pick<Transaction, "recurrence_id" | "date" | "description" | "amount">;
 
 // export type TransactionNew<TType extends WithTransactionType = TransactionType> =
 //   ExtractTransactionType<TType> extends TransferTransactionType

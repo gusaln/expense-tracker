@@ -9,6 +9,7 @@ import expenseRoutes from "./expenses/routes";
 import incomeRoutes from "./incomes/routes";
 import errorHandler from "./middlewares/errorHandler.middleware";
 import notFoundHandler from "./middlewares/notFound.middleware";
+import recurrentTransactionRoutes from "./recurrentTransactions/routes";
 import summaryRoutes from "./summaries/routes";
 import transactionRoutes from "./transactions/routes";
 import transferRoutes from "./transfers/routes";
@@ -29,6 +30,7 @@ app.use("/api/v1/incomes", incomeRoutes);
 app.use("/api/v1/expenses", expenseRoutes);
 app.use("/api/v1/transfers", transferRoutes);
 app.use("/api/v1/summaries", summaryRoutes);
+app.use("/api/v1/recurrentTransactions", recurrentTransactionRoutes);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

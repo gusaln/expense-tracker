@@ -46,11 +46,11 @@ export const findCategoryById = async (id: CategoryDbId): Promise<Category> => {
 };
 
 /**
- * Finds multiple categories by its their ids
+ * Finds many categories by their ids
  *
  * @throws {ResourceNotFoundError} if the category does not exist.
  */
-export const findMultipleCategoriesById = async (
+export const findManyCategoriesById = async (
   ids: CategoryDbId | CategoryDbId[]
 ): Promise<Category[]> => {
   ids = Array.isArray(ids) ? ids : [ids];

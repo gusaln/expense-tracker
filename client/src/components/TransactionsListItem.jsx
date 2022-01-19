@@ -3,6 +3,7 @@ import React from "react";
 import { paperDark } from "../colors";
 import useComputeTextColor from "../hooks/useComputeTextColor";
 import { formatNumber } from "../utils";
+import Icon from "./Icon";
 import TimeValue from "./TimeValue";
 
 function TransactionsListItem(props) {
@@ -24,7 +25,10 @@ function TransactionsListItem(props) {
 
       <div className="flex-grow">
         <div className="flex justify-between text-xl">
-          <div>{props.description}</div>
+          <div className="flex items-center">
+            <span>{props.description}</span>
+            {props.recurrence_id && <Icon value="repeat"/> }
+          </div>
           <div className={props.type === "expense" ? "text-red-500" : "text-blue-500"}>
             {formatNumber(props.amount)}
           </div>
@@ -50,6 +54,7 @@ function TransactionsListItem(props) {
 TransactionsListItem.propTypes = {
   // id: PropTypes.string,
   type: PropTypes.oneOf(["income", "expense", "transfer"]).isRequired,
+  recurrence_id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   account_id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   account: PropTypes.object.isRequired,
   category_id: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
